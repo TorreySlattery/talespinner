@@ -1,0 +1,3 @@
+talespinner/settings.py
+*.pyc
+*.sqlite3
