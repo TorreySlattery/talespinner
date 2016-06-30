@@ -6,4 +6,5 @@ def get_feat_char(seed):
 def print_list_map(_list):
     pass
 
-
+def generate():
+    pass
