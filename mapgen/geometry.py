@@ -24,7 +24,7 @@ class Rectangle(object):
         rect.contains((self.x2, self.y1)) or \
         rect.contains((self.x2, self.y2))
 
-    def contains(self, point):
-        x,y = point
+    def contains(self, vertex):
+        x,y = vertex
         return (self.x1 < x < self.x2) and (self.y1 < y < self.y2)
 
