@@ -4,7 +4,14 @@ class Maze(object):
     maze = [[]]
 
     def __init__(self, **kwargs):
+        self.width = kwargs.get('width', 40)
+        self.height = kwargs.get('height', 20)
+
         self.generate(**kwargs)
+
+        origin_x = random.randint(0, self.width)
+        origin_y = random.randint(0, self.height)
+        self.cursor = (origin_x, origin_y)  # Set a start position
 
     def __str__(self):
         _str = ''
@@ -13,9 +20,7 @@ class Maze(object):
         return _str
 
     def generate(self, **kwargs):
-        width = kwargs.get('width', 40)
-        height = kwargs.get('height', 20)
-        self.maze = [['#' for jj in range(height)] for ii in range(width)]
+        self.maze = [['#' for jj in range(self.height)] for ii in range(self.width)]
 
     def get_feat_char(self, index):
         if 0 < index < 10:
@@ -30,14 +35,21 @@ class Maze(object):
             return '?'
 
     def can_dig(self, direction):
-        pass
+        x, y = direction
+        cx, cy = self.cursor
 
+        if self.width-1 < cx + x < 0:
+            return False
+        if self.height-1 < cy + y < 0:
+            return False
+
+        return '?'
     def dig(self, direction):
         pass
 
-    def _get_dir(**kwargs):
+    def _get_dir(self, **kwargs):
         exclude = kwargs.get('exclude', [])
-        dir = random.choice(list(range(1,5))-exclude)
+        dir = random.choice(list(set(list(range(1,5)))-set(exclude)))
         if dir == 1:
             return (0, 1)
         elif dir == 2:

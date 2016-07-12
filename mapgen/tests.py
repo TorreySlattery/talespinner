@@ -1,6 +1,7 @@
 from django.test import TestCase
 
 from mapgen.geometry import Rectangle
+from mapgen.utils import Maze
 
 class GeometryTestCase(TestCase):
     def setUp(self):
@@ -34,3 +35,13 @@ class GeometryTestCase(TestCase):
         self.assertTrue(self.rect.intersects(rect))
         self.assertTrue(rect.intersects(self.rect))
 
+class MazeTestCase(TestCase):
+    def setUp(self):
+        self.maze = Maze()
+
+    def test_get_dir(self):
+        x, y = self.maze._get_dir()
+        self.assertGreaterEqual(x, -1)
+        self.assertGreaterEqual(y, -1)
+        self.assertLessEqual(x, 1)
+        self.assertLessEqual(y, 1)
