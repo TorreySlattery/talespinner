@@ -20,7 +20,7 @@ class Maze(object):
         return _str
 
     def generate(self, **kwargs):
-        self.maze = [['#' for jj in range(self.height)] for ii in range(self.width)]
+        self.maze = [[0 for jj in range(self.height)] for ii in range(self.width)]
 
     def get_feat_char(self, index):
         if 0 < index < 10:
@@ -35,15 +35,22 @@ class Maze(object):
             return '?'
 
     def can_dig(self, direction):
+        # We check 2*x and 2*y because our maze cells also represent walls; without doubling the distance we dig
+        # we'd still get a maze, but it'd look much less "mazelike" without a way to mark passages next to one another
         x, y = direction
         cx, cy = self.cursor
 
-        if self.width-1 < cx + x < 0:
-            return False
-        if self.height-1 < cy + y < 0:
+        # Check outer boundaries
+        if cx+x+x < 0 or self.width-1 < cx+x+x:
+           return False
+        if cy+y+y < 0 or self.height-1 < cy+y+y:
             return False
 
-        return '?'
+        if self.maze[cy + y + y][cx + x + x] == 0: 
+            return True
+        else:
+            return False
+
     def dig(self, direction):
         pass
 

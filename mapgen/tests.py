@@ -45,3 +45,10 @@ class MazeTestCase(TestCase):
         self.assertGreaterEqual(y, -1)
         self.assertLessEqual(x, 1)
         self.assertLessEqual(y, 1)
+
+    def test_can_dig(self):
+        self.maze.cursor = (0,0)
+        self.assertTrue(self.maze.can_dig((1,0)))
+        self.assertTrue(self.maze.can_dig((0,1)))
+        self.assertFalse(self.maze.can_dig((-1,0)))
+        self.assertFalse(self.maze.can_dig((0,-1)))
