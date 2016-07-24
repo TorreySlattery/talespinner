@@ -39,16 +39,35 @@ class MazeTestCase(TestCase):
     def setUp(self):
         self.maze = Maze()
 
-    def test_get_dir(self):
-        x, y = self.maze._get_dir()
-        self.assertGreaterEqual(x, -1)
-        self.assertGreaterEqual(y, -1)
-        self.assertLessEqual(x, 1)
-        self.assertLessEqual(y, 1)
+    def test_get_dirs(self):
+        directions  = self.maze.get_dirs()
 
-    def test_can_dig(self):
-        self.maze.cursor = (0,0)
-        self.assertTrue(self.maze.can_dig((1,0)))
-        self.assertTrue(self.maze.can_dig((0,1)))
-        self.assertFalse(self.maze.can_dig((-1,0)))
-        self.assertFalse(self.maze.can_dig((0,-1)))
+        for direction in directions:
+            self.assertIn(direction, [(1,0), (-1,0), (0,1), (0,-1)])
+
+    def test_get_quad(self):
+        tl,tr,bl,br = ((0,0), (39, 0), (0, 19), (39, 19))
+
+        from_top_left = self.maze.get_quad(tl)
+        self.assertEqual(from_top_left['N'], None)
+        self.assertEqual(from_top_left['E'], 0)
+        self.assertEqual(from_top_left['S'], 0)
+        self.assertEqual(from_top_left['W'], None)
+
+        from_top_right = self.maze.get_quad(tr)
+        self.assertEqual(from_top_right['N'], None)
+        self.assertEqual(from_top_right['E'], None)
+        self.assertEqual(from_top_right['S'], 0)
+        self.assertEqual(from_top_right['W'], 0)
+
+        from_bottom_left = self.maze.get_quad(bl)
+        self.assertEqual(from_bottom_left['N'], 0)
+        self.assertEqual(from_bottom_left['E'], 0)
+        self.assertEqual(from_bottom_left['S'], None)
+        self.assertEqual(from_bottom_left['W'], None)
+
+        from_bottom_right = self.maze.get_quad(br)
+        self.assertEqual(from_bottom_right['N'], 0)
+        self.assertEqual(from_bottom_right['E'], None)
+        self.assertEqual(from_bottom_right['S'], None)
+        self.assertEqual(from_bottom_right['W'], 0)

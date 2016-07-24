@@ -16,11 +16,11 @@ class Maze(object):
     def __str__(self):
         _str = ''
         for row in self.maze:
-            _str += ''.join(row) + "\n"
+            _str += ''.join(str(x) for x in row) + "\n"
         return _str
 
     def generate(self, **kwargs):
-        self.maze = [[0 for jj in range(self.height)] for ii in range(self.width)]
+        self.maze = [[0 for jj in range(self.width)] for ii in range(self.height)]
 
     def get_feat_char(self, index):
         if 0 < index < 10:
@@ -34,37 +34,30 @@ class Maze(object):
         else:
             return '?'
 
-    def can_dig(self, direction):
-        # We check 2*x and 2*y because our maze cells also represent walls; without doubling the distance we dig
-        # we'd still get a maze, but it'd look much less "mazelike" without a way to mark passages next to one another
-        x, y = direction
-        cx, cy = self.cursor
+    def dig(self, curr):
+        x,y = curr
+        directions = self.get_dirs()
+        for direction in directions:
+            # Check if we can dig in that direction. If so, change the cell
+            # and then move the cursor to this position, then recurse
+            pass
 
-        # Check outer boundaries
-        if cx+x+x < 0 or self.width-1 < cx+x+x:
-           return False
-        if cy+y+y < 0 or self.height-1 < cy+y+y:
-            return False
+    def get_dirs(self):
+        directions = [(1,0), (-1, 0), (0, 1), (0,-1)]
+        random.shuffle(directions)
+        return directions
 
-        if self.maze[cy + y + y][cx + x + x] == 0: 
-            return True
-        else:
-            return False
+    def get_quad(self, point):
+        """
+        Get the cells N,E,S,W of the given point
+        """
+        x,y = point
 
-    def dig(self, direction):
-        pass
+        return {
+                "N": self.maze[y-1][0] if y!= 0 else None,
+                "E": self.maze[y][x+1] if x < self.width-1 else None,
+                "S": self.maze[y+1][x] if y < self.height-1 else None,
+                "W": self.maze[y][x-1] if x!= 0 else None
+               }
 
-    def _get_dir(self, **kwargs):
-        exclude = kwargs.get('exclude', [])
-        dir = random.choice(list(set(list(range(1,5)))-set(exclude)))
-        if dir == 1:
-            return (0, 1)
-        elif dir == 2:
-            return (1, 0)
-        elif dir == 3:
-            return (0, -1)
-        elif dir == 4:
-            return (-1, 0)
-        else:
-            return (0, 0)
 
