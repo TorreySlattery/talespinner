@@ -17,7 +17,8 @@ class Maze(object):
         _str = ''
         upright = [row for row in reversed(self.maze)]
         for row in upright:
-            _str += ''.join(str(x) for x in row) + "\n"
+            _str += ''.join(str(x).replace('0',u'\u2588').replace('1',' ')\
+                                  .replace('5','S') for x in row) + "\n"
         return _str
 
     def generate(self, **kwargs):
