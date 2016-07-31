@@ -45,35 +45,8 @@ class MazeTestCase(TestCase):
         for direction in directions:
             self.assertIn(direction, [(1,0), (-1,0), (0,1), (0,-1)])
 
-    def test_get_quad(self):
-        bl,br,tl,tr = ((0,0), (39, 0), (0, 19), (39, 19))
-
-        from_top_left = self.maze.get_quad(tl)
-        self.assertEqual(from_top_left[(0,1)], None)
-        self.assertEqual(from_top_left[(1,0)], 0)
-        self.assertEqual(from_top_left[(0,-1)], 0)
-        self.assertEqual(from_top_left[(-1,0)], None)
-
-        from_top_right = self.maze.get_quad(tr)
-        self.assertEqual(from_top_right[(0,1)], None)
-        self.assertEqual(from_top_right[(1,0)], None)
-        self.assertEqual(from_top_right[(0,-1)], 0)
-        self.assertEqual(from_top_right[(-1,0)], 0)
-
-        from_bottom_left = self.maze.get_quad(bl)
-        self.assertEqual(from_bottom_left[(0,1)], 0)
-        self.assertEqual(from_bottom_left[(1,0)], 0)
-        self.assertEqual(from_bottom_left[(0,-1)], None)
-        self.assertEqual(from_bottom_left[(-1,0)], None)
-
-        from_bottom_right = self.maze.get_quad(br)
-        self.assertEqual(from_bottom_right[(0,1)], 0)
-        self.assertEqual(from_bottom_right[(1,0)], None)
-        self.assertEqual(from_bottom_right[(0,-1)], None)
-        self.assertEqual(from_bottom_right[(-1,0)], 0)
-
     def test_get_quad_cardinals(self):
-        self.maze.maze = [[1,2,3],
+        self.maze.room = [[1,2,3],
                           [4,5,6],
                           [7,8,9]] # North 
         center = (1,1)

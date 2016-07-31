@@ -1,30 +1,46 @@
 import random
 
-class Maze(object):
-    maze = [[]]
+class Room(object):
+    room = [[]]
 
     def __init__(self, **kwargs):
         self.width = kwargs.get('width', 40)
         self.height = kwargs.get('height', 20)
 
-        origin_x = random.randint(0, self.width-1)
-        origin_y = random.randint(0, self.height-1)
-        self.cursor = (origin_x, origin_y)  # Set a start position
+        x = random.randint(0, self.width-1)
+        y = random.randint(0, self.height-1)
+        self.cursor = (x, y)
 
         self.generate(**kwargs)
 
+
     def __str__(self):
         _str = ''
-        upright = [row for row in reversed(self.maze)]
+        upright = [row for row in reversed(self.room)]
+        for row in upright:
+            _str += ''.join(str(x).replace('0',u'\u2588').replace('1',' ')\
+                                  .replace('5','S') for x in row) + "\n"
+        return _str
+
+
+    def generate(self, **kwargs):
+        self.room = [[0 for jj in range(self.width)] for ii in range(self.height)]
+
+
+class Maze(Room):
+    def __str__(self):
+        _str = ''
+        upright = [row for row in reversed(self.room)]
         for row in upright:
             _str += ''.join(str(x).replace('0',u'\u2588').replace('1',' ')\
                                   .replace('5','S') for x in row) + "\n"
         return _str
 
     def generate(self, **kwargs):
-        self.maze = [[0 for jj in range(self.width)] for ii in range(self.height)]
+        self.room = [[0 for jj in range(self.width)] for ii in range(self.height)]
+
         x,y = self.cursor
-        self.maze[y][x] = 5
+        self.room[y][x] = 5
         self.dig(self.cursor)
 
     def get_feat_char(self, index):
@@ -50,7 +66,7 @@ class Maze(object):
             if y+dy < 0 or self.height <= y+dy:
                 continue
 
-            if self.maze[y+dy][x+dx]:
+            if self.room[y+dy][x+dx]:
                 #Diggable cells are zeroes
                 continue
             quad = self.get_quad((x+dx, y+dy))
@@ -66,7 +82,7 @@ class Maze(object):
                 continue
 
             # If we make it this far, our expected dig site is clear, so let's excavate and recurse
-            self.maze[y+dy][x+dx] = 1  # Sure, what the hell
+            self.room[y+dy][x+dx] = 1  # Sure, what the hell
             self.dig((x+dx, y+dy))
 
     def get_dirs(self):
@@ -87,22 +103,22 @@ class Maze(object):
                 (-1,0): None
                 }
         try:
-            quad[(0,1)] = self.maze[y+1][x] if y < self.height-1 else None
+            quad[(0,1)] = self.room[y+1][x] if y < self.height-1 else None
         except IndexError:
             pass
 
         try:
-            quad[(1,0)] = self.maze[y][x+1] if x < self.width else None
+            quad[(1,0)] = self.room[y][x+1] if x < self.width else None
         except IndexError:
             pass
 
         try:
-            quad[(0,-1)] = self.maze[y-1][x] if 0 < y else None
+            quad[(0,-1)] = self.room[y-1][x] if 0 < y else None
         except IndexError:
             pass
 
         try:
-            quad[(-1,0)] = self.maze[y][x-1] if 0 < x else None
+            quad[(-1,0)] = self.room[y][x-1] if 0 < x else None
         except IndexError:
             pass
 
