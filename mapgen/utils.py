@@ -27,6 +27,41 @@ class Room(object):
         self.room = [[0 for jj in range(self.width)] for ii in range(self.height)]
 
 
+    def get_quad(self, point):
+        """
+        Get the cells N,E,S,W of the given point
+        """
+        x,y = point
+
+        quad = {
+                (0,1): None,
+                (1,0): None,
+                (0,-1): None,
+                (-1,0): None
+                }
+        try:
+            quad[(0,1)] = self.room[y+1][x] if y < self.height-1 else None
+        except IndexError:
+            pass
+
+        try:
+            quad[(1,0)] = self.room[y][x+1] if x < self.width else None
+        except IndexError:
+            pass
+
+        try:
+            quad[(0,-1)] = self.room[y-1][x] if 0 < y else None
+        except IndexError:
+            pass
+
+        try:
+            quad[(-1,0)] = self.room[y][x-1] if 0 < x else None
+        except IndexError:
+            pass
+
+        return quad
+
+
 class Maze(Room):
     def __str__(self):
         _str = ''
@@ -90,37 +125,33 @@ class Maze(Room):
         random.shuffle(directions)
         return directions
 
-    def get_quad(self, point):
-        """
-        Get the cells N,E,S,W of the given point
-        """
-        x,y = point
+class Cave(Room):
+    """
+    Represents a room with staggered walls and possibly internal structures
+    """
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        start = (self.width//2, self.height//2)
+        self.dig(start, **kwargs)
 
-        quad = {
-                (0,1): None,
-                (1,0): None,
-                (0,-1): None,
-                (-1,0): None
-                }
-        try:
-            quad[(0,1)] = self.room[y+1][x] if y < self.height-1 else None
-        except IndexError:
-            pass
+    def dig(self, start, **kwargs):
+        lifespan = kwargs.get('lifespan', 10)
+        cells = [start]
+        
+        while lifespan > 0:
+            _cells = []
+            for cell in cells:
+                quad = self.get_quad(cell)
+                for direction in quad:
+                    if quad[direction] == 0:
+                        dug = random.randint(1,2) % 2
+                        if dug:
+                            dx,dy = direction
+                            cx,cy = cell
+                            self.room[cy+dy][cx+dx] = dug
+                            _cells.append((cx+dx, cy+dy))
 
-        try:
-            quad[(1,0)] = self.room[y][x+1] if x < self.width else None
-        except IndexError:
-            pass
+            cell = _cells
+            lifespan -= 1
 
-        try:
-            quad[(0,-1)] = self.room[y-1][x] if 0 < y else None
-        except IndexError:
-            pass
-
-        try:
-            quad[(-1,0)] = self.room[y][x-1] if 0 < x else None
-        except IndexError:
-            pass
-
-        return quad
 
