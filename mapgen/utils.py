@@ -27,6 +27,9 @@ class Room(object):
         self.room = [[0 for jj in range(self.width)] for ii in range(self.height)]
 
 
+    def reset(self):
+        self.generate()
+
     def get_quad(self, point):
         """
         Get the cells N,E,S,W of the given point
@@ -131,13 +134,35 @@ class Cave(Room):
     """
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        start = (self.width//2, self.height//2)
+        x,y = self.width//2, self.height//2
+        self.room[y][x] = 1
+        self.area = 1  # tracking the number of dug-out spaces
+        start = (x,y)
         self.dig(start, **kwargs)
+        if 'min_area' in kwargs:
+            min_area = int(kwargs.get('min_area'))
+            if self.width * self.height < min_area:
+                print("Min area was set too high for the size of the Room.")
+                min_area = (self.width * self.height) - 1
+            for regrow in range(10):
+                if self.area < min_area:
+                    self.reset(start)
+                    self.dig(start, **kwargs)
+                else:
+                    break
+            print("Couldn't reach the min area specified (did you set a long enough lifespan?)")
+        print("Total area:{}".format(self.area))
+
+    def reset(self, start):
+        super().reset()
+        x,y = start
+        self.room[y][x] = 1
+        self.area = 1
 
     def dig(self, start, **kwargs):
-        lifespan = kwargs.get('lifespan', 10)
+        lifespan = kwargs.get('lifespan', 555550)
         cells = [start]
-        
+
         while lifespan > 0:
             _cells = []
             for cell in cells:
@@ -149,9 +174,12 @@ class Cave(Room):
                             dx,dy = direction
                             cx,cy = cell
                             self.room[cy+dy][cx+dx] = dug
+                            self.area += 1
                             _cells.append((cx+dx, cy+dy))
 
-            cell = _cells
+            cells = _cells
             lifespan -= 1
+
+
 
 
