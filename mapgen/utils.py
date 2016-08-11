@@ -134,23 +134,28 @@ class Cave(Room):
     """
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        if 'seed' in kwargs:
+            random.seed(kwargs.get('seed'))
         x,y = self.width//2, self.height//2
         self.room[y][x] = 1
         self.area = 1  # tracking the number of dug-out spaces
         start = (x,y)
         self.dig(start, **kwargs)
-        if 'min_area' in kwargs:
-            min_area = int(kwargs.get('min_area'))
-            if self.width * self.height < min_area:
-                print("Min area was set too high for the size of the Room.")
-                min_area = (self.width * self.height) - 1
-            for regrow in range(10):
-                if self.area < min_area:
-                    self.reset(start)
-                    self.dig(start, **kwargs)
-                else:
-                    break
-            print("Couldn't reach the min area specified (did you set a long enough lifespan?)")
+        min_area = kwargs.get('min_area', (self.width*self.height)//3)
+        if self.width * self.height < min_area:
+            print("Min area was set too high for the size of the Room.")
+            min_area = (self.width * self.height) - 1
+        best_map = (self.room, self.area)
+        for regrow in range(10):
+            if self.area < min_area:
+                self.reset(start)
+                self.dig(start, **kwargs)
+                if best_map[1] < self.area:
+                    # We have a new winner
+                    best_map = (self.room, self.area)
+            else:
+                break
+        self.room, self.area = best_map
         print("Total area:{}".format(self.area))
 
     def reset(self, start):
