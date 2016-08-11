@@ -55,3 +55,24 @@ class MazeTestCase(TestCase):
         self.assertEqual(quad[(1,0)], 6)
         self.assertEqual(quad[(0,-1)], 2)
         self.assertEqual(quad[(-1,0)], 4)
+
+
+class CaveTestCase(TestCase):
+
+    def setUp(self):
+        pass
+
+    def test_reset(self):
+        pass
+
+    def test_lifespan(self):
+        pass
+
+    def test_seed(self):
+        pass
+
+    def test_min_area(self):
+        pass
+
+    def test_area(self):
+        pass
