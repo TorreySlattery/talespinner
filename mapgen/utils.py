@@ -147,15 +147,16 @@ class Cave(Room):
         x,y = self.width//2, self.height//2
         self.room[y][x] = 1
         self.area = 1  # tracking the number of dug-out spaces
+        self.min_area = kwargs.get('min_area', (self.width*self.height)//3)
+        if self.width * self.height < self.min_area:
+            print("Min area was set too high for the size of the Room.")
+            self.min_area = (self.width * self.height) - 1
         start = (x,y)
         self.dig(start, **kwargs)
-        min_area = kwargs.get('min_area', (self.width*self.height)//3)
-        if self.width * self.height < min_area:
-            print("Min area was set too high for the size of the Room.")
-            min_area = (self.width * self.height) - 1
+
         best_map = (self.room, self.area)
         for regrow in range(10):
-            if self.area < min_area:
+            if self.area < self.min_area:
                 self.reset(start)
                 self.dig(start, **kwargs)
                 if best_map[1] < self.area:
@@ -176,7 +177,7 @@ class Cave(Room):
         lifespan = kwargs.get('lifespan', 555550)
         cells = [start]
 
-        while lifespan > 0:
+        while lifespan > 0 and cells and self.area < self.min_area:
             _cells = []
             for cell in cells:
                 quad = self.get_quad(cell)

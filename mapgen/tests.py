@@ -99,22 +99,48 @@ class MazeTestCase(TestCase):
 class CaveTestCase(TestCase):
 
     def setUp(self):
-        pass
+        self.cave = Cave()
 
     def test_reset(self):
-        pass
+        self.cave.reset((0,0))
+        self.assertEqual(self.cave.area, 1)
 
     def test_lifespan(self):
-        pass
+        new_cave = Cave(lifespan=0)
+        self.assertEqual(new_cave.area, 1)  # We always have the start location
+
+        newer_cave = Cave(lifespan=-1)
+        self.assertEqual(new_cave.area, 1)
 
     def test_seedable(self):
-        pass
+        seed = self.cave.seed
+        clone_cave = Cave(seed=seed)
+        self.assertEqual(self.cave.room, clone_cave.room)
+        new_seed = seed + "This is a really unremarkable seed"
+        new_cave = Cave(seed=new_seed)
+        # This, like the Maze one, isn't airtight because of possible hash collisions
+        self.assertNotEqual(self.cave.room, new_cave.room)
 
     def test_recreate_from_db(self):
-        pass
+        room_data = self.cave.save()
+        room_data.refresh_from_db()
+        clone_cave = Cave(seed=room_data.seed)
+        self.assertEqual(self.cave.room, clone_cave.room)
 
     def test_min_area(self):
-        pass
+        min_cave = Cave(min_area = 15)
+        self.assertGreaterEqual(min_cave.area, 15)
+
+        too_high_min_cave = Cave(width=10, height=10, min_area=2000)
+        self.assertNotEqual(too_high_min_cave.min_area, 2000)
 
     def test_area(self):
-        pass
+        seed = "A rather unremarkable seed"
+        cave1 = Cave(lifespan=0, seed=seed)
+        area1 = cave1.area
+        self.assertEqual(area1, 1)
+        cave2 = Cave(seed=seed)
+        area2 = cave1.area
+        self.assertNotEqual(area1, area2)
+        # Same deal. Potential to get a false negative, but I just want a basic check
+
