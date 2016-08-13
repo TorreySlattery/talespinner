@@ -9,7 +9,7 @@ class Room(object):
     def __init__(self, **kwargs):
         self.width = kwargs.get('width', 40)
         self.height = kwargs.get('height', 20)
-        self.seed = kwargs.get('seed', random.randint(0, sys.maxsize))
+        self.seed = str(kwargs.get('seed', random.randint(0, sys.maxsize)))
         random.seed(self.seed)
 
         x = random.randint(0, self.width-1)
