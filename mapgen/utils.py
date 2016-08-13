@@ -68,13 +68,14 @@ class Room(object):
         return quad
 
     def save(self, description=None):
-        room = RoomData(description=description,
-                         seed=self.seed,
-                         area=self.area,
-                         width=self.width,
-                         height=self.height)
+        room_data = RoomData(description=description,
+                             seed=self.seed,
+                             area=self.area,
+                             width=self.width,
+                             height=self.height)
 
-        room.save()
+        room_data.save()
+        return room_data
 
 
 class Maze(Room):

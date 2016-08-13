@@ -2,6 +2,7 @@ from django.test import TestCase
 
 from mapgen.geometry import Rectangle
 from mapgen.utils import Room, Maze, Cave
+from mapgen.models import RoomData
 
 class GeometryTestCase(TestCase):
     def setUp(self):
@@ -47,6 +48,19 @@ class RoomTestCase(TestCase):
     def test_height(self):
         self.assertEqual(self.room.height, len(self.room.room))
 
+    def test_save(self):
+        room_objs = RoomData.objects.all()
+        self.assertEqual(len(room_objs), 0)
+
+        room_data = self.room.save()
+        room_objs = RoomData.objects.all()
+        self.assertEqual(len(room_objs), 1)
+
+        room_obj = room_objs[0]
+
+        self.assertEqual(self.room.width, room_obj.width)
+        self.assertEqual(self.room.height, room_obj.height)
+
 class MazeTestCase(TestCase):
     def setUp(self):
         self.maze = Maze()
@@ -68,6 +82,11 @@ class MazeTestCase(TestCase):
         self.assertEqual(quad[(0,-1)], 2)
         self.assertEqual(quad[(-1,0)], 4)
 
+    def test_seedable(self):
+        pass
+
+    def test_recreate_from_db(self):
+        pass
 
 class CaveTestCase(TestCase):
 
@@ -80,7 +99,10 @@ class CaveTestCase(TestCase):
     def test_lifespan(self):
         pass
 
-    def test_seed(self):
+    def test_seedable(self):
+        pass
+
+    def test_recreate_from_db(self):
         pass
 
     def test_min_area(self):
