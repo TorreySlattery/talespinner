@@ -83,7 +83,12 @@ class MazeTestCase(TestCase):
         self.assertEqual(quad[(-1,0)], 4)
 
     def test_seedable(self):
-        pass
+        seed = self.maze.seed
+        clone_maze = Maze(seed=seed)
+        self.assertEqual(self.maze.room, clone_maze.room)
+        new_seed = seed + "This is a really unremarkable seed"
+        new_maze = Maze(seed=new_seed)
+        self.assertNotEqual(self.maze.room, new_maze.room)
 
     def test_recreate_from_db(self):
         pass
