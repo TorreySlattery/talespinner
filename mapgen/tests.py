@@ -91,7 +91,10 @@ class MazeTestCase(TestCase):
         self.assertNotEqual(self.maze.room, new_maze.room)
 
     def test_recreate_from_db(self):
-        pass
+        room_data = self.maze.save()
+        room_data.refresh_from_db()
+        clone_maze = Maze(seed=room_data.seed)
+        self.assertEqual(self.maze.room, clone_maze.room)
 
 class CaveTestCase(TestCase):
 
