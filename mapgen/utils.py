@@ -1,4 +1,7 @@
 import random
+import sys
+
+from mapgen.models import RoomData
 
 class Room(object):
     room = [[]]
@@ -6,13 +9,15 @@ class Room(object):
     def __init__(self, **kwargs):
         self.width = kwargs.get('width', 40)
         self.height = kwargs.get('height', 20)
+        self.seed = kwargs.get('seed', random.randint(0, sys.maxsize))
+        random.seed(self.seed)
 
         x = random.randint(0, self.width-1)
         y = random.randint(0, self.height-1)
         self.cursor = (x, y)
+        self.area = 0
 
         self.generate(**kwargs)
-
 
     def __str__(self):
         _str = ''
@@ -22,10 +27,8 @@ class Room(object):
                                   .replace('5','S') for x in row) + "\n"
         return _str
 
-
     def generate(self, **kwargs):
         self.room = [[0 for jj in range(self.width)] for ii in range(self.height)]
-
 
     def reset(self):
         self.generate()
@@ -64,15 +67,20 @@ class Room(object):
 
         return quad
 
+    def save(self, description=None):
+        room = RoomData(description=description,
+                         seed=self.seed,
+                         area=self.area,
+                         width=self.width,
+                         height=self.height)
+
+        room.save()
+
 
 class Maze(Room):
-    def __str__(self):
-        _str = ''
-        upright = [row for row in reversed(self.room)]
-        for row in upright:
-            _str += ''.join(str(x).replace('0',u'\u2588').replace('1',' ')\
-                                  .replace('5','S') for x in row) + "\n"
-        return _str
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.area = 1
 
     def generate(self, **kwargs):
         self.room = [[0 for jj in range(self.width)] for ii in range(self.height)]
@@ -121,6 +129,7 @@ class Maze(Room):
 
             # If we make it this far, our expected dig site is clear, so let's excavate and recurse
             self.room[y+dy][x+dx] = 1  # Sure, what the hell
+            self.area += 1
             self.dig((x+dx, y+dy))
 
     def get_dirs(self):
@@ -134,8 +143,6 @@ class Cave(Room):
     """
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        if 'seed' in kwargs:
-            random.seed(kwargs.get('seed'))
         x,y = self.width//2, self.height//2
         self.room[y][x] = 1
         self.area = 1  # tracking the number of dug-out spaces
@@ -184,7 +191,4 @@ class Cave(Room):
 
             cells = _cells
             lifespan -= 1
-
-
-
 
