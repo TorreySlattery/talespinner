@@ -194,3 +194,15 @@ class Cave(Room):
             cells = _cells
             lifespan -= 1
 
+
+class Map(object):
+    """
+    Represents a collection of Rooms and how they're oriented spatially in
+    regards to one another, e.g. the first level of a dungeon or temple would
+    be a Map.
+    """
+
+    def __init__(self):
+        pass
+
+
