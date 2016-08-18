@@ -1,7 +1,7 @@
 from django.test import TestCase
 
 from mapgen.geometry import Rectangle
-from mapgen.utils import Room, Maze, Cave
+from mapgen.utils import Room, Maze, Cave, Map
 from mapgen.models import RoomData
 
 class GeometryTestCase(TestCase):
@@ -143,4 +143,29 @@ class CaveTestCase(TestCase):
         area2 = cave1.area
         self.assertNotEqual(area1, area2)
         # Same deal. Potential to get a false negative, but I just want a basic check
+
+class MapTestCase(TestCase):
+
+    def setUp(self):
+        pass
+
+    def test_populate(self):
+        pass
+
+    def test_place(self):
+        pass
+
+    def test_check_available(self):
+        map1 = Map(width=3, height=3)
+        # [[0, 0, 0],
+        #  [0, 0, 0],
+        #  [0, 0, 0]] <-North end
+
+        room1 = [[1, 2],
+                 [3, 4]]
+
+        self.assertTrue(map1.check_available((1,1), room1))
+        self.assertFalse(map1.check_available((2,0), room1))
+        self.assertFalse(map1.check_available((0, 2), room1))
+
 

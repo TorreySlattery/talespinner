@@ -206,9 +206,9 @@ class Map(Room):
         kwargs['width'] = kwargs.get('width', 140)
         kwargs['height'] = kwargs.get('height', 30)
         super().__init__(**kwargs)
-        self.generate(**kwargs)
+        self.populate(**kwargs)
 
-    def generate(self, **kwargs):
+    def populate(self, **kwargs):
         """
         Takes whatever parameters we come up with and builds an assortment of related Rooms, creating a map or dungeon
         level.
@@ -230,7 +230,7 @@ class Map(Room):
         """
         pass
 
-    def check_collision(self, position, room):
+    def check_available(self, position, room):
         """
         Checks if a smaller Room can be placed at the given position. For the current iteration, undug (0-value) Room
         values still count for boundary detection. That is, if room is 40x40, even if it only has one spot dug out, it
@@ -248,14 +248,14 @@ class Map(Room):
         x,y = position
 
         # If room would have edges outside of Map, we can skip everything else
-        if x + rw > self.room.width or y + rh > self.room.height:
+        if x + rw > self.width or y + rh > self.height:
             return False
 
         for idx_y, row in enumerate(room):
             for idx_x, col in enumerate(row):
                 ox = x + idx_x
                 oy = y + idx_y
-                if room[row][col] > 0: #todo: go back and change others like this so we can use negative values
+                if room[idx_y][idx_x] > 0: #todo: go back and change others like this so we can use negative values
                     if self.room[oy][ox] > 0:
                         return False
 
