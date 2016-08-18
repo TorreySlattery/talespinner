@@ -195,14 +195,69 @@ class Cave(Room):
             lifespan -= 1
 
 
-class Map(object):
+class Map(Room):
     """
     Represents a collection of Rooms and how they're oriented spatially in
     regards to one another, e.g. the first level of a dungeon or temple would
     be a Map.
     """
 
-    def __init__(self):
+    def __init__(self, **kwargs):
+        kwargs['width'] = kwargs.get('width', 140)
+        kwargs['height'] = kwargs.get('height', 30)
+        super().__init__(**kwargs)
+        self.generate(**kwargs)
+
+    def generate(self, **kwargs):
+        """
+        Takes whatever parameters we come up with and builds an assortment of related Rooms, creating a map or dungeon
+        level.
+
+        Args:
+
+        """
         pass
 
+    def place(self, room):
+        """
+        Takes a 2D list of values and attempts to place it without collisions in the room property 
+
+        Args:
+            room: a list of lists containing various map values
+
+        Returns:
+            True if the room was placed successfully, False otherwise
+        """
+        pass
+
+    def check_collision(self, position, room):
+        """
+        Checks if a smaller Room can be placed at the given position. For the current iteration, undug (0-value) Room
+        values still count for boundary detection. That is, if room is 40x40, even if it only has one spot dug out, it
+        will be checked as if it's 40x40. This behavior may change, but I need a starting point
+
+        Args:
+            position: a tuple containing the x,y indices of the room property to begin at
+            room: a list of lists containing various map values
+
+        Returns:
+            True if the room can be placed at position, False if not.
+        """
+        rw = len(room[0])
+        rh = len(room)
+        x,y = position
+
+        # If room would have edges outside of Map, we can skip everything else
+        if x + rw > self.room.width or y + rh > self.room.height:
+            return False
+
+        for idx_y, row in enumerate(room):
+            for idx_x, col in enumerate(row):
+                ox = x + idx_x
+                oy = y + idx_y
+                if room[row][col] > 0: #todo: go back and change others like this so we can use negative values
+                    if self.room[oy][ox] > 0:
+                        return False
+
+        return True
 
