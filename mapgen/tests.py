@@ -174,7 +174,9 @@ class MapTestCase(TestCase):
         pass
 
     def test_place(self):
-        pass
+        tiny_room = [[1]]
+        x,y = self.map.place(tiny_room)
+        self.assertEqual(self.map.room[y][x], 1)
 
     def test_check_available(self):
         room1 = [[1, 2],
