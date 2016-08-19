@@ -144,10 +144,31 @@ class CaveTestCase(TestCase):
         self.assertNotEqual(area1, area2)
         # Same deal. Potential to get a false negative, but I just want a basic check
 
+    def test_get_shrinkwrapped(self):
+        self.cave.room =  [[0, 0, 0],
+                           [0, 1, 0],
+                           [0, 0, 0]] # <-North end
+
+        self.assertEqual(self.cave.get_shrinkwrapped(), [[1]])
+
+    def test_set_shrinkwrapped(self):
+        self.cave.room =  [[0, 0, 0],
+                           [0, 1, 0],
+                           [0, 0, 0]] # <-North end
+
+        self.cave.set_shrinkwrapped()
+        self.assertEqual(self.cave.room, [[1]])
+        self.assertEqual(self.cave.height, 1)
+        self.assertEqual(self.cave.width, 1)
+
+
 class MapTestCase(TestCase):
 
     def setUp(self):
-        pass
+        self.map =  Map(width=3, height=3)
+        self.map.room = [[0, 0, 0],
+                         [0, 0, 0],
+                         [0, 0, 0]] # <-North end
 
     def test_populate(self):
         pass
@@ -156,17 +177,12 @@ class MapTestCase(TestCase):
         pass
 
     def test_check_available(self):
-        map1 = Map(width=3, height=3)
-        map1.room= [[0, 0, 0],
-                    [0, 0, 0],
-                    [0, 0, 0]] # <-North end
-
         room1 = [[1, 2],
                  [3, 4]]
 
-        self.assertTrue(map1.check_available((1,1), room1))
-        self.assertFalse(map1.check_available((2,0), room1))
-        self.assertFalse(map1.check_available((0, 2), room1))
+        self.assertTrue(self.map.check_available((1,1), room1))
+        self.assertFalse(self.map.check_available((2,0), room1))
+        self.assertFalse(self.map.check_available((0, 2), room1))
 
         map2 = Map(width=3, height=3)
         map2.room = [[0, 0, 0],
