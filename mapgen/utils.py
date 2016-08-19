@@ -237,7 +237,7 @@ class Map(Room):
         super().__init__(**kwargs)
         self.populate(**kwargs)
 
-    def populate(self, **kwargs):
+    def populate(self, retries=10, **kwargs):
         """
         Takes whatever parameters we come up with and builds an assortment of related Rooms, creating a map or dungeon
         level.
@@ -245,7 +245,15 @@ class Map(Room):
         Args:
 
         """
-        pass
+        room_positions = []
+
+        c = Cave(**kwargs)
+        room = c.room
+        for _ in range(retries):
+            success = self.place(room)
+            if success:
+                room_positions.append(success)
+                break
 
     def place(self, room):
         """
