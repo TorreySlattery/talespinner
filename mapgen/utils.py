@@ -221,6 +221,8 @@ class Cave(Room):
         Shrinkwraps the current Cave
         """
         self.room = self.get_shrinkwrapped()
+        self.height = len(self.room)
+        self.width = len(self.room[0])
 
 class Map(Room):
     """
