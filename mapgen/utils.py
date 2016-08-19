@@ -192,6 +192,35 @@ class Cave(Room):
             cells = _cells
             lifespan -= 1
 
+    def get_shrinkwrapped(self):
+        """
+        Culls as much of self.room as possible, down to only above-0 values at its edges.
+        """
+        reduced_map = []
+
+        least_x, least_y = self.width, self.height
+        greatest_x, greatest_y = 0,0
+
+        for idx_r, row in enumerate(self.room):
+            for idx_c, col in enumerate(row):
+                if self.room[idx_r][idx_c] > 0:
+                    if idx_c < least_x:
+                        least_x = idx_c
+                    if idx_r < least_y:
+                        least_y = idx_r
+
+                    if idx_c > greatest_x:
+                        greatest_x = idx_c
+                    if idx_r > greatest_y:
+                        greatest_y = idx_r
+
+        return [row[least_x:greatest_x+1] for row in self.room[least_y:greatest_y+1]]
+
+    def set_shrinkwrapped(self):
+        """
+        Shrinkwraps the current Cave
+        """
+        self.room = self.get_shrinkwrapped()
 
 class Map(Room):
     """
