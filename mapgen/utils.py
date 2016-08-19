@@ -235,12 +235,11 @@ class Map(Room):
         kwargs['width'] = kwargs.get('width', 140)
         kwargs['height'] = kwargs.get('height', 30)
         super().__init__(**kwargs)
-        self.populate(**kwargs)
+        anchor_coords = self.populate()
 
-    def populate(self, retries=10, **kwargs):
+    def populate(self, retries=100):
         """
-        Takes whatever parameters we come up with and builds an assortment of related Rooms, creating a map or dungeon
-        level.
+        Takes whatever parameters we come up with and builds an assortment of Rooms
 
         Args:
             retries: how many random positioning attempts we make before resorting to brute force
@@ -250,14 +249,18 @@ class Map(Room):
 
         """
         room_positions = []
+        for x in range(5): # We'll need to figure out how to balance number vs size based on Map dimensions
+            c_seed = random.randint(0, sys.maxsize)
+            c = Cave(seed=c_seed)
+            for _ in range(retries):
+                success = self.place(c.room)
+                if success:
+                    room_positions.append(success)
+                    break
+            #todo: If we get to here, we need to try to brute force a placement. If that also fails, we need to scale
+            # down the size of the Room we're trying to insert.
 
-        c = Cave(**kwargs)
-        room = c.room
-        for _ in range(retries):
-            success = self.place(room)
-            if success:
-                room_positions.append(success)
-                break
+        return room_positions
 
     def place(self, room):
         """
@@ -275,7 +278,8 @@ class Map(Room):
             # Replace values and return the anchor point
             for idx_r, row in enumerate(room):  # I should work on my naming conventions -.-
                 for idx_c, col in enumerate(row):
-                    self.room[idx_r+ry][idx_c+rx] = room[idx_r][idx_c]
+                    if room[idx_r][idx_c] > 0:  # undug spaces might overwrite previous placements, like layering jpgs
+                        self.room[idx_r+ry][idx_c+rx] = room[idx_r][idx_c]
             return (rx,ry)
 
         return False
