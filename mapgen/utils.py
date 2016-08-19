@@ -243,6 +243,10 @@ class Map(Room):
         level.
 
         Args:
+            retries: how many random positioning attempts we make before resorting to brute force
+
+        Returns:
+            A list of anchor coordinates of rooms successfully placed
 
         """
         room_positions = []
@@ -257,7 +261,7 @@ class Map(Room):
 
     def place(self, room):
         """
-        Takes a 2D list of values and attempts to place it without collisions in the room property 
+        Takes a 2D list of values and attempts to place it without collisions in the room property
 
         Args:
             room: a list of lists containing various map values
@@ -265,7 +269,16 @@ class Map(Room):
         Returns:
             True if the room was placed successfully, False otherwise
         """
-        pass
+        rx = random.randint(0, self.width-1)
+        ry = random.randint(0, self.height-1)
+        if self.check_available((rx,ry), room):
+            # Replace values and return the anchor point
+            for idx_r, row in enumerate(room):  # I should work on my naming conventions -.-
+                for idx_c, col in enumerate(row):
+                    self.room[idx_r+ry][idx_c+rx] = room[idx_r][idx_c]
+            return (rx,ry)
+
+        return False
 
     def check_available(self, position, room):
         """

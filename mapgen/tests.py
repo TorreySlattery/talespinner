@@ -157,9 +157,9 @@ class MapTestCase(TestCase):
 
     def test_check_available(self):
         map1 = Map(width=3, height=3)
-        # [[0, 0, 0],
-        #  [0, 0, 0],
-        #  [0, 0, 0]] <-North end
+        map1.room= [[0, 0, 0],
+                    [0, 0, 0],
+                    [0, 0, 0]] # <-North end
 
         room1 = [[1, 2],
                  [3, 4]]
