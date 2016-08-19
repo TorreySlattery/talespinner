@@ -149,7 +149,6 @@ class Cave(Room):
         self.area = 1  # tracking the number of dug-out spaces
         self.min_area = kwargs.get('min_area', (self.width*self.height)//3)
         if self.width * self.height < self.min_area:
-            print("Min area was set too high for the size of the Room.")
             self.min_area = (self.width * self.height) - 1
         start = (x,y)
         self.dig(start, **kwargs)
@@ -165,7 +164,6 @@ class Cave(Room):
             else:
                 break
         self.room, self.area = best_map
-        print("Total area:{}".format(self.area))
 
     def reset(self, start):
         super().reset()

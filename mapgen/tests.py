@@ -140,7 +140,7 @@ class CaveTestCase(TestCase):
         area1 = cave1.area
         self.assertEqual(area1, 1)
         cave2 = Cave(seed=seed)
-        area2 = cave1.area
+        area2 = cave2.area
         self.assertNotEqual(area1, area2)
         # Same deal. Potential to get a false negative, but I just want a basic check
 
@@ -168,4 +168,18 @@ class MapTestCase(TestCase):
         self.assertFalse(map1.check_available((2,0), room1))
         self.assertFalse(map1.check_available((0, 2), room1))
 
+        map2 = Map(width=3, height=3)
+        map2.room = [[0, 0, 0],
+                     [0, 1, 0],
+                     [0, 0, 0]]
+
+        self.assertFalse(map2.check_available((0,0), room1))
+        self.assertFalse(map2.check_available((0,1), room1))
+        self.assertFalse(map2.check_available((0,2), room1))
+        self.assertFalse(map2.check_available((1,0), room1))
+        self.assertFalse(map2.check_available((1,1), room1))
+        self.assertFalse(map2.check_available((1,2), room1))
+        self.assertFalse(map2.check_available((2,0), room1))
+        self.assertFalse(map2.check_available((2,1), room1))
+        self.assertFalse(map2.check_available((2,2), room1))
 
