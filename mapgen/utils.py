@@ -138,6 +138,19 @@ class Maze(Room):
         random.shuffle(directions)
         return directions
 
+    def dig_path(self, pos1, pos2):
+        """
+        Digs a path between two points in the Room
+
+        Args:
+            pos1: the x,y coordinate tuple to start from
+            pos2: the x,y coordinate tuple of the destination
+
+        Returns:
+            True if it found a path, False otherwise
+        """
+        pass
+
 class Cave(Room):
     """
     Represents a room with staggered walls and possibly internal structures

@@ -39,10 +39,7 @@ INSTALLED_APPS = [
     'bestiary',
     'django_extensions',
     'mapgen',
-<<<<<<< d43285b3533fc3620a00f869caa998b7f2bf154c
     'dungeon',
-=======
->>>>>>> Remove settings.py from gitignore
 ]
 
 MIDDLEWARE_CLASSES = [
