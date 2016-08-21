@@ -1,3 +1,4 @@
+{% load dungeon_extras %}
 <!DOCTYPE html>
 <html lang='en-US'>
 <head>
@@ -6,13 +7,11 @@
 </head>
 <body>
     Todo: Set up template inheritance so we don't just run a single monolithic html file
-    Todo: Register a filter to return... whatever we're returning to display room values as something prettier.
-    We can probably start with just spans with varied CSS
     <table>
     {% for row in room %}
     <tr>
         {% for col in row %}
-        <td>{{ col }}</td>
+        <td>{{ col|convert }}</td>
         {% endfor %}
     </tr>
     {% endfor %}
