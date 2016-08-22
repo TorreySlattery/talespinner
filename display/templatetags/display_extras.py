@@ -16,8 +16,8 @@ def convert(value):
     """
 
     charmap = {
-            0: '#',  # Undug spaces. Stone, earth, whatever.
-            1: ' ',  # Excavated spaces. Generally clear to move through.
+            0: 'block0',  # Undug spaces. Stone, earth, whatever.
+            1: 'open',  # Excavated spaces. Generally clear to move through.
     }
 
     return charmap.get(value, '?')  # There's no exception handling, so return a safe default if not found
