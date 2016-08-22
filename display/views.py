@@ -1,13 +1,14 @@
 from django.http import HttpResponse
 from django.views.generic import TemplateView
 
+from mapgen.utils import Map
+
 class IndexView(TemplateView):
     template_name = 'display/index.html'
 
-    # We'll eventually want to pay attention to the url to load specific maps
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['room'] = [[0, 1, 1],
-                           [1, 0, 0],
-                           [1, 1, 1]]
-        return context
+    def get_room(self):
+        """
+        Seeing how this feels. Is it a neat trick, or a bad idea to call it directly from the template?
+        """
+        default_map = Map()
+        return default_map.room

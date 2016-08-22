@@ -1,0 +1,21 @@
+*{
+    font-family: "Arial", Sans-Serif;
+}
+
+#map-table {
+    border-collapse: collapse;
+}
+
+#map-table td {
+    border: 1px solid #000;
+    height: 10px;
+    width: 10px;
+}
+
+.open {
+    background-color: #eee;
+}
+
+.block0 {
+    background-color: #111;
+}
