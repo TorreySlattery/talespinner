@@ -9,7 +9,7 @@
 <body>
     Todo: Set up template inheritance so we don't just run a single monolithic html file
     <table id="map-table">
-    {% for row in room %}
+    {% for row in view.get_room %}
     <tr>
         {% for col in row %}
         <td class="{{ col|convert }}"></td>
