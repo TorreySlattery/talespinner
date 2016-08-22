@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'bestiary',
     'django_extensions',
     'mapgen',
-    'dungeon',
+    'display',
 ]
 
 MIDDLEWARE_CLASSES = [
