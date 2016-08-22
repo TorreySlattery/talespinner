@@ -262,9 +262,18 @@ class Map(Room):
 
         """
         room_positions = []
+        large_width = self.width//2
+        large_height = self.height//2
+
+        med_width = self.width//5
+        med_height = self.height//5
+
+        sm_width = self.width//10
+        sm_height = self.height//10
+
         for x in range(5): # We'll need to figure out how to balance number vs size based on Map dimensions
             c_seed = random.randint(0, sys.maxsize)
-            c = Cave(seed=c_seed)
+            c = Cave(seed=c_seed, width=large_width, height=large_height)
             for _ in range(retries):
                 success = self.place(c.room)
                 if success:

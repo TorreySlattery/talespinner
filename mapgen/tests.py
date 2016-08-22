@@ -171,7 +171,8 @@ class MapTestCase(TestCase):
                          [0, 0, 0]] # <-North end
 
     def test_populate(self):
-        pass
+        placed_coordinates = self.map.populate()
+        self.assertNotEqual(placed_coordinates, [])
 
     def test_place(self):
         tiny_room = [[1]]
