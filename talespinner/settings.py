@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'bestiary',
     'django_extensions',
     'mapgen',
-    'dungeon',
+    'display',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -124,4 +124,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 SHELL_PLUS_POST_IMPORTS = (
 'random',
+('mapgen.utils', 'Maze'),
+('mapgen.utils', 'Cave'),
+('mapgen.utils', 'Map'),
 )

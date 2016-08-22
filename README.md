@@ -7,4 +7,4 @@ The current plan is to have the project broken into the following sections:
   
 - The Bestiary app keeps track of creatures and any vital statistics to create searchable, scalable encounters
 - The Mapgen app builds the actual terrain via various algorithms
-- The Dungeon app provides the actual Views and Templates needed to render the game world
+- The Display app provides the actual Views and Templates needed to render the game world

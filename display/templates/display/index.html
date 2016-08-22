@@ -1,3 +1,4 @@
+{% load display_extras %}
 <!DOCTYPE html>
 <html lang='en-US'>
 <head>
@@ -6,5 +7,13 @@
 </head>
 <body>
     Todo: Set up template inheritance so we don't just run a single monolithic html file
+    <table>
+    {% for row in room %}
+    <tr>
+        {% for col in row %}
+        <td>{{ col|convert }}</td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
 </body>
 </html>
