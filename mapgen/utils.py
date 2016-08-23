@@ -1,5 +1,6 @@
 import random
 import sys
+from itertools import repeat
 
 from mapgen.models import RoomData
 
@@ -186,6 +187,9 @@ class Cave(Room):
     Represents a room with staggered walls and possibly internal structures
     """
     def __init__(self, **kwargs):
+        # Give plenty of room to grow, as we expect to shrinkwrap the finished product
+        kwargs.update({'height': 200})
+        kwargs.update({'width': 200})
         super().__init__(**kwargs)
         x,y = self.width//2, self.height//2
         self.room[y][x] = 1
@@ -278,39 +282,49 @@ class Map(Room):
         kwargs['width'] = kwargs.get('width', 140)
         kwargs['height'] = kwargs.get('height', 30)
         super().__init__(**kwargs)
-        anchor_coords = self.populate()
+        large = kwargs.get('large', 1)
+        medium = kwargs.get('medium', 2)
+        small = kwargs.get('small', 4)
+        anchor_coords = self.populate(large, medium, small)
+        print("Anchors: {}".format(anchor_coords))
 
-    def populate(self, retries=100):
+    def populate(self, large, medium, small):
         """
         Takes whatever parameters we come up with and builds an assortment of Rooms
 
         Args:
-            retries: how many random positioning attempts we make before resorting to brute force
+            large: a positive integer of how many large rooms to try to place
+            medium: a positive integer of how many medium rooms to try to place
+            small: a positive integer of how many small rooms to try to place
 
         Returns:
             A list of anchor coordinates of rooms successfully placed
 
         """
         room_positions = []
-        large_width = self.width//2
-        large_height = self.height//2
+        dimensions = self.width * self.height
+        l_area = dimensions//6
+        m_area = dimensions//12
+        s_area = dimensions//24
 
-        med_width = self.width//5
-        med_height = self.height//5
-
-        sm_width = self.width//10
-        sm_height = self.height//10
-
-        for x in range(5): # We'll need to figure out how to balance number vs size based on Map dimensions
-            c_seed = random.randint(0, sys.maxsize)
-            c = Cave(seed=c_seed, width=large_width, height=large_height)
-            for _ in range(retries):
+        def _place(area):
+            c = Cave(min_area=area)
+            c.set_shrinkwrapped()
+            for x in range(100):
                 success = self.place(c.room)
                 if success:
                     room_positions.append(success)
-                    break
-            #todo: If we get to here, we need to try to brute force a placement. If that also fails, we need to scale
-            # down the size of the Room we're trying to insert.
+                    return True
+            return False
+
+        for _ in repeat(None, large):
+            _place(l_area)
+
+        for _ in repeat(None, medium):
+            _place(m_area)
+
+        for _ in repeat(None, small):
+            _place(s_area)
 
         return room_positions
 
