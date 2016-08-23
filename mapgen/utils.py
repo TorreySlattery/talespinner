@@ -86,7 +86,7 @@ class Room(object):
             pos2: the x,y coordinate tuple of the destination
 
         Returns:
-            True if it dug a path, False otherwise
+            True if it dug a path, False otherwise, which only happens if we tried to access an invalid index
         """
 
         # Start with an as-the-crow-flies approach: draw a line between pos1 & pos2
@@ -105,9 +105,15 @@ class Room(object):
             left = min(x1, x2)
             right = max(x1, x2)
 
+            y_previous = round(left * m)
             for x in range(left, right+1):
                 y = round(x*m)
                 self.room[y][x] = 1
+
+                # We need to widen the tunnel when we cut through a diagonal
+                if y_previous != y:
+                    self.room[y_previous][x] = 1
+                y_previous = y
 
             return True
         except IndexError:
