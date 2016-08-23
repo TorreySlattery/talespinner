@@ -77,6 +77,42 @@ class Room(object):
         room_data.save()
         return room_data
 
+    def dig_path(self, pos1, pos2):
+        """
+        Digs a path between two points in the Room
+
+        Args:
+            pos1: the x,y coordinate tuple to start from
+            pos2: the x,y coordinate tuple of the destination
+
+        Returns:
+            True if it dug a path, False otherwise
+        """
+
+        # Start with an as-the-crow-flies approach: draw a line between pos1 & pos2
+
+        x1,y1 = pos1
+        x2,y2 = pos2
+
+        try:
+            if x2-x1 == 0:
+                top = max(y1, y2)
+                bottom = min(y1, y2)
+                for y in range(bottom, top+1):
+                    self.room[y][x1] = 1
+
+            m = float(y2-y1)/float(x2-x1)
+            left = min(x1, x2)
+            right = max(x1, x2)
+
+            for x in range(left, right+1):
+                y = round(x*m)
+                self.room[y][x] = 1
+
+            return True
+        except IndexError:
+            return False
+
 
 class Maze(Room):
     def __init__(self, **kwargs):
@@ -138,18 +174,6 @@ class Maze(Room):
         random.shuffle(directions)
         return directions
 
-    def dig_path(self, pos1, pos2):
-        """
-        Digs a path between two points in the Room
-
-        Args:
-            pos1: the x,y coordinate tuple to start from
-            pos2: the x,y coordinate tuple of the destination
-
-        Returns:
-            True if it found a path, False otherwise
-        """
-        pass
 
 class Cave(Room):
     """
