@@ -279,8 +279,8 @@ class Map(Room):
     """
 
     def __init__(self, **kwargs):
-        kwargs['width'] = kwargs.get('width', 140)
-        kwargs['height'] = kwargs.get('height', 30)
+        kwargs['width'] = kwargs.get('width', 100)
+        kwargs['height'] = kwargs.get('height', 100)
         super().__init__(**kwargs)
         large = kwargs.get('large', 1)
         medium = kwargs.get('medium', 2)
