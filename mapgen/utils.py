@@ -78,6 +78,75 @@ class Room(object):
         room_data.save()
         return room_data
 
+    def is_path_clear_between(self, pos1, pos2):
+        """
+        Tries to determine whether there is a continuous arrangement of non-blocked spaces connecting two positions.
+
+        Args:
+            pos1: the x,y coordinate tuple to start from
+            pos2: the x,y coordinate tuple of the destination
+        """
+
+        x1, y1 = pos1
+        x2, y2 = pos2
+        if self.room[y1][x1] < 0 or self.room[y2][x2] < 0: # Can't pathfind if we're starting blocked off
+            return False
+
+        # Well... let's see if we can implement Dijkstra's algorithm
+        def get_neighbors(_pos):
+            nearby = []
+            _x, _y = _pos
+
+            try:
+                if self.room[_y+1][_x] > 0:
+                    nearby.append((_x,_y+1))
+            except IndexError:
+                pass  # pythonic index checking is weird
+
+            try:
+                if self.room[_y-1][_x] > 0:
+                    nearby.append((_x, y-1))
+            except IndexError:
+                pass
+
+            try:
+                if self.room[_y][_x+1] > 0:
+                    nearby.append((_x+1, _y))
+            except IndexError:
+                pass
+
+            try:
+                if self.room[_y][x-1] > 0:
+                    nearby.append((_x-1, _y))
+            except IndexError:
+                pass
+
+            return nearby
+
+        q = []
+        dist = dict()
+        prev = dict()
+        for y in self.height:
+            for x in self.width:
+                coords = (x, y)
+                q.append(coords)
+                dist[coods] = self.width * self.height  # We just need a number bigger than the longest possible path
+                prev[coords] = None
+
+        dist[pos1] = 0
+
+        while q:
+           u = min(q, key=q.get)
+           del(q[u])
+
+           for v in get_neighbors(u):
+               alt = dist[u] + 1  # Normally we calculate distance, but it's always going to be 1 for us
+               if alt < dist[v]:
+                   dist[v] = alt
+                   prev[v] = u
+
+        return dist, prev
+
     def dig_path(self, pos1, pos2):
         """
         Digs a path between two points in the Room
@@ -324,6 +393,8 @@ class Map(Room):
 
         for _ in repeat(None, small):
             _place(s_area)
+
+        # todo:  we need a pathfinding algorithm to see if we need to dig a path between rooms. 
 
         return room_positions
 
