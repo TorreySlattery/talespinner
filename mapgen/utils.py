@@ -353,14 +353,31 @@ class Map(Room):
 
         # If we couldn't place the room randomly, try a brute force approach
         from_edge = random.randint(0,3)
-        from_edge = 0
 
         if from_edge == 0:  # left
-            for iy, row in enumerate(self.room):
-                for ix, col in enumerate(row):
-                    if self.check_available((ix, iy), room):
-                        _place(ix, iy)
-                        return (ix, iy)
+            for yy in range(self.height):
+                for xx in range(self.width):
+                    if self.check_available((xx, yy), room):
+                        _place(xx, yy)
+                        return (xx, yy)
+        elif from_edge == 1:  # top
+            for xx in range(self.width):
+                for yy in reversed(range(self.height)):
+                    if self.check_available((xx, yy), room):
+                        _place(xx, yy)
+                        return (xx, yy)
+        elif from_edge == 2:  # right
+            for xx in reversed(range(self.width)):
+                for yy in range(self.height):
+                    if self.check_available((xx, yy), room):
+                        _place(xx, yy)
+                        return (xx, yy)
+        else:
+            for yy in reversed(range(self.height)):
+                for xx in range(self.width):
+                    if self.check_available((xx, yy), room):
+                        _place(xx, yy)
+                        return (xx, yy)
 
         return False
 
