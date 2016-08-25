@@ -310,11 +310,10 @@ class Map(Room):
         def _place(area):
             c = Cave(min_area=area)
             c.set_shrinkwrapped()
-            for x in range(100):
-                success = self.place(c.room)
-                if success:
-                    room_positions.append(success)
-                    return True
+            success = self.place(c.room)
+            if success:
+                room_positions.append(success)
+                return True
             return False
 
         for _ in repeat(None, large):
@@ -328,7 +327,7 @@ class Map(Room):
 
         return room_positions
 
-    def place(self, room):
+    def place(self, room, retries=10):
         """
         Takes a 2D list of values and attempts to place it without collisions in the room property
 
@@ -338,15 +337,30 @@ class Map(Room):
         Returns:
             True if the room was placed successfully, False otherwise
         """
-        rx = random.randint(0, self.width-1)
-        ry = random.randint(0, self.height-1)
-        if self.check_available((rx,ry), room):
-            # Replace values and return the anchor point
+        def _place(posx, posy):
             for idx_r, row in enumerate(room):  # I should work on my naming conventions -.-
                 for idx_c, col in enumerate(row):
                     if room[idx_r][idx_c] > 0:  # undug spaces might overwrite previous placements, like layering jpgs
-                        self.room[idx_r+ry][idx_c+rx] = room[idx_r][idx_c]
-            return (rx,ry)
+                        self.room[idx_r+posy][idx_c+posx] = room[idx_r][idx_c]
+
+        for _ in range(retries):
+            rx = random.randint(0, self.width-1)
+            ry = random.randint(0, self.height-1)
+            if self.check_available((rx,ry), room):
+                # Replace values and return the anchor point
+                _place(rx,ry)
+                return (rx, ry)
+
+        # If we couldn't place the room randomly, try a brute force approach
+        from_edge = random.randint(0,3)
+        from_edge = 0
+
+        if from_edge == 0:  # left
+            for iy, row in enumerate(self.room):
+                for ix, col in enumerate(row):
+                    if self.check_available((ix, iy), room):
+                        _place(ix, iy)
+                        return (ix, iy)
 
         return False
 
