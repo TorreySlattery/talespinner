@@ -1,6 +1,7 @@
 import random
 import sys
 from itertools import repeat
+from collections import OrderedDict
 
 from mapgen.models import RoomData
 
@@ -104,8 +105,9 @@ class Room(object):
                 pass  # pythonic index checking is weird
 
             try:
-                if self.room[_y-1][_x] > 0:
-                    nearby.append((_x, y-1))
+                if _y-1 >= 0:
+                    if self.room[_y-1][_x] > 0:
+                        nearby.append((_x, _y-1))
             except IndexError:
                 pass
 
@@ -116,38 +118,46 @@ class Room(object):
                 pass
 
             try:
-                if self.room[_y][x-1] > 0:
-                    nearby.append((_x-1, _y))
+                if _x-1 >= 0:
+                    if self.room[_y][_x-1] > 0:
+                        nearby.append((_x-1, _y))
             except IndexError:
                 pass
 
             return nearby
 
-        q = []
-        dist = dict()
-        prev = dict()
+        q = dict()
+        prev = OrderedDict()
         for y in range(self.height):
             for x in range(self.width):
-                coords = (x, y) # todo: evaluate whether we need to check free cell or not
-                q.append(coords)
-                dist[coords] = sys.maxsize # We just need a number bigger than the longest possible path
-                prev[coords] = None
+                coords = (x, y)
+                q[coords] = sys.maxsize
 
-        dist[pos1] = 0
+        q[pos1] = 0
 
         while q:
-           u = min(dist, key=dist.get)
-           if q[u] == sys.maxsize:  # If the only nodes left are max values, they weren't reachable
-               return False
-           del(q[u])
+            u = min(q, key=q.get)
+            if q[u] == sys.maxsize:  # If the only nodes left are max values, they weren't reachable
+                return False
+            if u == pos2:
+                prev[u] = q[u]
+                print("Prev: {}".format(prev))
+                return prev
+            d = q[u]
+            del(q[u])
 
-           for v in get_neighbors(u):
-               alt = dist[u] + 1  # Normally we calculate distance, but it's always going to be 1 for us
-               if alt < dist[v]:
-                   dist[v] = alt
-                   prev[v] = u
+            for v in get_neighbors(u):
+                alt = d + 1  # Normally we calculate distance, but it's always going to be 1 for us
+                try:
+                    if alt < q[v]:
+                        if v in q:
+                            q[v] = alt
+                            # Todo: too much is getting added to this since we changed the conditional
+                            prev[u] = d
+                except KeyError:
+                    pass  # v wasn't in q anymore
 
-        return dist, prev
+        return False
 
     def dig_path(self, pos1, pos2):
         """
