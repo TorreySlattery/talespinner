@@ -1,3 +1,5 @@
+import sys
+
 from django.test import TestCase
 
 from mapgen.geometry import Rectangle
@@ -40,6 +42,7 @@ class GeometryTestCase(TestCase):
 class RoomTestCase(TestCase):
     def setUp(self):
         self.room = Room()
+        self.sroom = Room(width=3, height=3)
 
     def test_width(self):
         for row in self.room.room:
@@ -60,6 +63,13 @@ class RoomTestCase(TestCase):
 
         self.assertEqual(self.room.width, room_obj.width)
         self.assertEqual(self.room.height, room_obj.height)
+
+    def test_is_path_clear_between(self):
+        self.sroom.room = [[1, 1, 1],
+                           [1, 1, 1],
+                           [1, 1, 1]]
+
+        self.assertTrue(self.sroom.is_path_clear_between((0,0), (2,2)))
 
 class MazeTestCase(TestCase):
     def setUp(self):
@@ -131,8 +141,8 @@ class CaveTestCase(TestCase):
         min_cave = Cave(min_area = 15)
         self.assertGreaterEqual(min_cave.area, 15)
 
-        too_high_min_cave = Cave(width=10, height=10, min_area=2000)
-        self.assertNotEqual(too_high_min_cave.min_area, 2000)
+        too_high_min_cave = Cave(width=10, height=10, min_area=sys.maxsize)
+        self.assertNotEqual(too_high_min_cave.min_area, sys.maxsize)
 
     def test_area(self):
         seed = "A rather unremarkable seed"
@@ -171,7 +181,7 @@ class MapTestCase(TestCase):
                          [0, 0, 0]] # <-North end
 
     def test_populate(self):
-        placed_coordinates = self.map.populate()
+        placed_coordinates = self.map.populate(large=1, medium=0, small=0)
         self.assertNotEqual(placed_coordinates, [])
 
     def test_place(self):

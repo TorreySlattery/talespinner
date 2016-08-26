@@ -126,17 +126,19 @@ class Room(object):
         q = []
         dist = dict()
         prev = dict()
-        for y in self.height:
-            for x in self.width:
-                coords = (x, y)
+        for y in range(self.height):
+            for x in range(self.width):
+                coords = (x, y) # todo: evaluate whether we need to check free cell or not
                 q.append(coords)
-                dist[coods] = self.width * self.height  # We just need a number bigger than the longest possible path
+                dist[coords] = sys.maxsize # We just need a number bigger than the longest possible path
                 prev[coords] = None
 
         dist[pos1] = 0
 
         while q:
-           u = min(q, key=q.get)
+           u = min(dist, key=dist.get)
+           if q[u] == sys.maxsize:  # If the only nodes left are max values, they weren't reachable
+               return False
            del(q[u])
 
            for v in get_neighbors(u):
