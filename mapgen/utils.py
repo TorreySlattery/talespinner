@@ -1,7 +1,8 @@
 import random
 import sys
-from itertools import repeat
+from itertools import repeat, count
 from collections import OrderedDict
+from heapq import heappush, heappop
 
 from mapgen.models import RoomData
 
@@ -93,69 +94,67 @@ class Room(object):
         if self.room[y1][x1] < 0 or self.room[y2][x2] < 0: # Can't pathfind if we're starting blocked off
             return False
 
-        # Well... let's see if we can implement Dijkstra's algorithm
+    def Dijkstra(self, source, dest):
+
         def get_neighbors(_pos):
-            nearby = []
-            _x, _y = _pos
+           nearby = []
+           _x, _y = _pos
 
-            try:
-                if self.room[_y+1][_x] > 0:
-                    nearby.append((_x,_y+1))
-            except IndexError:
-                pass  # pythonic index checking is weird
+           try:
+               if self.room[_y+1][_x] > 0:
+                   nearby.append((_x,_y+1))
+           except IndexError:
+               pass  # pythonic index checking is weird
 
-            try:
-                if _y-1 >= 0:
-                    if self.room[_y-1][_x] > 0:
-                        nearby.append((_x, _y-1))
-            except IndexError:
-                pass
+           try:
+               if _y-1 >= 0:
+                   if self.room[_y-1][_x] > 0:
+                       nearby.append((_x, _y-1))
+           except IndexError:
+               pass
 
-            try:
-                if self.room[_y][_x+1] > 0:
-                    nearby.append((_x+1, _y))
-            except IndexError:
-                pass
+           try:
+               if self.room[_y][_x+1] > 0:
+                   nearby.append((_x+1, _y))
+           except IndexError:
+               pass
 
-            try:
-                if _x-1 >= 0:
-                    if self.room[_y][_x-1] > 0:
-                        nearby.append((_x-1, _y))
-            except IndexError:
-                pass
+           try:
+               if _x-1 >= 0:
+                   if self.room[_y][_x-1] > 0:
+                       nearby.append((_x-1, _y))
+           except IndexError:
+               pass
 
-            return nearby
+           return nearby
 
-        unvisited = dict()
-        path = OrderedDict()
-        for y in range(self.height):
-            for x in range(self.width):
-                coords = (x, y)
-                unvisited[coords] = sys.maxsize
+        dist = dict()
+        prev = dict()
+        unvisited = PriorityQueue()
 
-        unvisited[pos1] = 0
+        for x in range(self.width):
+            for y in range(self.height):
+                dist[(x,y)] = sys.maxsize
+                prev[(x,y)] = None
+                unvisited.add_task((x,y), priority=sys.maxsize)
+        dist[source] = 0
 
         while unvisited:
-            nearest = min(unvisited, key=unvisited.get)
-            if unvisited[nearest] == sys.maxsize:  # If the only nodes left are max values, they weren't reachable
+            u = unvisited.pop_task()
+            if u == dest:
+                # Found our destination
+                return dist, prev
+            elif dist[u] == sys.maxsize:
+                # The only remaining nodes aren't connected to the start point.
                 return False
-            if nearest == pos2:
-                path[nearest] = unvisited[nearest]
-                return path
-            distance = unvisited[nearest]
-            del(unvisited[nearest])
+            for neighbor in get_neighbors(u):
+                alt = dist[u] + 1
+                if alt < dist[neighbor]:
+                    dist[neighbor] = alt
+                    prev[neighbor] = u
+                    unvisited.add_task(neighbor, priority=alt)
 
-            for neighbor in get_neighbors(nearest):
-                alt = distance + 1  # Normally we calculate distance, but it's always going to be 1 for us
-                try:
-                    if alt < unvisited[neighbor]:
-                        if neighbor in unvisited:
-                            unvisited[neighbor] = alt
-                            path[nearest] = distance
-                except KeyError:
-                    pass  # v wasn't in q anymore
-
-        return False
+        return dist, prev
 
     def dig_path(self, pos1, pos2):
         """
@@ -492,4 +491,35 @@ class Map(Room):
                         return False
 
         return True
+
+
+class PriorityQueue():
+    """
+    https://docs.python.org/3/library/heapq.html#priority-queue-implementation-notes
+    """
+    pq = []
+    entry_finder = {}
+    REMOVED = '<removed-task>'
+    counter = count()
+
+    def add_task(self, task, priority=0):
+        if task in self.entry_finder:
+            self.remove_task(task)
+        count = next(self.counter)
+        entry = [priority, count, task]
+        self.entry_finder[task] = entry
+        heappush(self.pq, entry)
+
+    def remove_task(self, task):
+        entry = self.entry_finder.pop(task)
+        entry[-1] = self.REMOVED
+
+    def pop_task(self):
+        while self.pq:
+            priority, count, task = heappop(self.pq)
+            if task is not self.REMOVED:
+                del self.entry_finder[task]
+                return task
+        raise KeyError("pop from an empty priority queue")
+
 
