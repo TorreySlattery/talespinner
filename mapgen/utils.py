@@ -126,34 +126,32 @@ class Room(object):
 
             return nearby
 
-        q = dict()
-        prev = OrderedDict()
+        unvisited = dict()
+        path = OrderedDict()
         for y in range(self.height):
             for x in range(self.width):
                 coords = (x, y)
-                q[coords] = sys.maxsize
+                unvisited[coords] = sys.maxsize
 
-        q[pos1] = 0
+        unvisited[pos1] = 0
 
-        while q:
-            u = min(q, key=q.get)
-            if q[u] == sys.maxsize:  # If the only nodes left are max values, they weren't reachable
+        while unvisited:
+            nearest = min(unvisited, key=unvisited.get)
+            if unvisited[nearest] == sys.maxsize:  # If the only nodes left are max values, they weren't reachable
                 return False
-            if u == pos2:
-                prev[u] = q[u]
-                print("Prev: {}".format(prev))
-                return prev
-            d = q[u]
-            del(q[u])
+            if nearest == pos2:
+                path[nearest] = unvisited[nearest]
+                return path
+            distance = unvisited[nearest]
+            del(unvisited[nearest])
 
-            for v in get_neighbors(u):
-                alt = d + 1  # Normally we calculate distance, but it's always going to be 1 for us
+            for neighbor in get_neighbors(nearest):
+                alt = distance + 1  # Normally we calculate distance, but it's always going to be 1 for us
                 try:
-                    if alt < q[v]:
-                        if v in q:
-                            q[v] = alt
-                            # Todo: too much is getting added to this since we changed the conditional
-                            prev[u] = d
+                    if alt < unvisited[neighbor]:
+                        if neighbor in unvisited:
+                            unvisited[neighbor] = alt
+                            path[nearest] = distance
                 except KeyError:
                     pass  # v wasn't in q anymore
 
