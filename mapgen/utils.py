@@ -97,36 +97,41 @@ class Room(object):
     def Dijkstra(self, source, dest):
 
         def get_neighbors(_pos):
-           nearby = []
-           _x, _y = _pos
+            nearby = []
+            _x, _y = _pos
 
-           try:
-               if self.room[_y+1][_x] > 0:
-                   nearby.append((_x,_y+1))
-           except IndexError:
-               pass  # pythonic index checking is weird
+            try:
+                # Up
+                if self.room[_y+1][_x] > 0:
+                    nearby.append(((_x,_y+1), 0))
+            except IndexError:
+                pass  # pythonic index checking is weird
 
-           try:
-               if _y-1 >= 0:
-                   if self.room[_y-1][_x] > 0:
-                       nearby.append((_x, _y-1))
-           except IndexError:
-               pass
+            try:
+                # Down
+                if _y-1 >= 0:
+                    if self.room[_y-1][_x] > 0:
+                        nearby.append(((_x, _y-1), 2))
+            except IndexError:
+                pass
 
-           try:
-               if self.room[_y][_x+1] > 0:
-                   nearby.append((_x+1, _y))
-           except IndexError:
-               pass
+            try:
+                # Left
+                if _x-1 >= 0:
+                    if self.room[_y][_x-1] > 0:
+                        nearby.append(((_x-1, _y), 3))
+            except IndexError:
+                pass
 
-           try:
-               if _x-1 >= 0:
-                   if self.room[_y][_x-1] > 0:
-                       nearby.append((_x-1, _y))
-           except IndexError:
-               pass
+            try:
+                # Right
+                if self.room[_y][_x+1] > 0:
+                    nearby.append(((_x+1, _y), 1))
+            except IndexError:
+                pass
 
-           return nearby
+            # B,A Start
+            return nearby
 
         dist = dict()
         prev = dict()
@@ -135,7 +140,6 @@ class Room(object):
         for x in range(self.width):
             for y in range(self.height):
                 dist[(x,y)] = sys.maxsize
-                prev[(x,y)] = None
                 unvisited.add_task((x,y), priority=sys.maxsize)
         dist[source] = 0
 
@@ -147,13 +151,14 @@ class Room(object):
             elif dist[u] == sys.maxsize:
                 # The only remaining nodes aren't connected to the start point.
                 return False
-            for neighbor in get_neighbors(u):
+            for neighbor, direction in get_neighbors(u):
                 alt = dist[u] + 1
                 if alt < dist[neighbor]:
                     dist[neighbor] = alt
-                    prev[neighbor] = u
+                    prev[neighbor] = (dist[u], direction) 
                     unvisited.add_task(neighbor, priority=alt)
 
+        # Todo: We really only care about getting *a* shortest path. Also todo: rename the function
         return dist, prev
 
     def dig_path(self, pos1, pos2):

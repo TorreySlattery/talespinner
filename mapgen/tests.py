@@ -71,7 +71,9 @@ class RoomTestCase(TestCase):
         self.sroom.room = [[1, 1, 1],
                            [1, 1, 1],
                            [1, 1, 1]]
-
+        dist, prev = self.sroom.Dijkstra(bl, tr)
+        print(dist)
+        print(prev)
         self.assertTrue(self.sroom.Dijkstra(bl, tr))
 
         # A wall runs the full height of the room, making the destination unreachable.
@@ -81,9 +83,10 @@ class RoomTestCase(TestCase):
         self.assertFalse(self.sroom.Dijkstra(bl, tr))
 
         # A wall runs most of the height of the room, eliminating all but one path
-        self.sroom.room = [[1, 1, 1],
+        self.sroom.room = [[1, 0, 1],
                            [1, 0, 1],
-                           [1, 0, 1]]
+                           [1, 1, 1]]
+
         self.assertTrue(self.sroom.Dijkstra(bl, tr))
 
 class MazeTestCase(TestCase):
