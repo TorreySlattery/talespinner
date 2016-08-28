@@ -71,23 +71,24 @@ class RoomTestCase(TestCase):
         self.sroom.room = [[1, 1, 1],
                            [1, 1, 1],
                            [1, 1, 1]]
-        dist, prev = self.sroom.Dijkstra(bl, tr)
+        dist, prev = self.sroom.is_path_clear_between(bl, tr)
         print(dist)
         print(prev)
-        self.assertTrue(self.sroom.Dijkstra(bl, tr))
+        self.assertTrue(self.sroom.is_path_clear_between(bl, tr))
 
         # A wall runs the full height of the room, making the destination unreachable.
         self.sroom.room = [[1, 0, 1],
                            [1, 0, 1],
                            [1, 0, 1]]
-        self.assertFalse(self.sroom.Dijkstra(bl, tr))
+        self.assertFalse(self.sroom.is_path_clear_between(bl, tr))
 
         # A wall runs most of the height of the room, eliminating all but one path
         self.sroom.room = [[1, 0, 1],
                            [1, 0, 1],
                            [1, 1, 1]]
 
-        self.assertTrue(self.sroom.Dijkstra(bl, tr))
+        br = (2, 0)
+        self.assertTrue(self.sroom.is_path_clear_between(bl, br))
 
 class MazeTestCase(TestCase):
     def setUp(self):

@@ -80,21 +80,20 @@ class Room(object):
         room_data.save()
         return room_data
 
-    def is_path_clear_between(self, pos1, pos2):
+    def is_path_clear_between(self, source, dest):
         """
-        Tries to determine whether there is a continuous arrangement of non-blocked spaces connecting two positions.
+        Tries to determine whether there is a continuous arrangement of non-blocked spaces connecting two positions
+        using an implementation of Dijkstra's algorithm and a min-priority queue.
 
         Args:
             pos1: the x,y coordinate tuple to start from
             pos2: the x,y coordinate tuple of the destination
         """
 
-        x1, y1 = pos1
-        x2, y2 = pos2
+        x1, y1 = source
+        x2, y2 = dest
         if self.room[y1][x1] < 0 or self.room[y2][x2] < 0: # Can't pathfind if we're starting blocked off
             return False
-
-    def Dijkstra(self, source, dest):
 
         def get_neighbors(_pos):
             nearby = []
@@ -155,7 +154,7 @@ class Room(object):
                 alt = dist[u] + 1
                 if alt < dist[neighbor]:
                     dist[neighbor] = alt
-                    prev[neighbor] = (dist[u], direction) 
+                    prev[neighbor] = (dist[u], direction)
                     unvisited.add_task(neighbor, priority=alt)
 
         # Todo: We really only care about getting *a* shortest path. Also todo: rename the function
