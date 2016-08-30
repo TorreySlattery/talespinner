@@ -170,7 +170,7 @@ class Room(object):
         # If we somehow get here, we've failed. 
         return False
 
-    def dig_path(self, pos1, pos2):
+    def dig_path_between(self, pos1, pos2):
         """
         Digs a path between two points in the Room
 
@@ -193,6 +193,7 @@ class Room(object):
                 bottom = min(y1, y2)
                 for y in range(bottom, top+1):
                     self.room[y][x1] = 1
+                return True
 
             m = float(y2-y1)/float(x2-x1)
             left = min(x1, x2)
@@ -377,8 +378,7 @@ class Map(Room):
         large = kwargs.get('large', 1)
         medium = kwargs.get('medium', 2)
         small = kwargs.get('small', 4)
-        anchor_coords = self.populate(large, medium, small)
-        print("Anchors: {}".format(anchor_coords))
+        self.anchor_coords = self.populate(large, medium, small)
 
     def populate(self, large, medium, small):
         """
@@ -395,9 +395,9 @@ class Map(Room):
         """
         room_positions = []
         dimensions = self.width * self.height
-        l_area = dimensions//6
-        m_area = dimensions//12
-        s_area = dimensions//24
+        l_area = max(dimensions//6, 1)
+        m_area = max(dimensions//12, 1)
+        s_area = max(dimensions//24, 1)
 
         def _place(area):
             c = Cave(min_area=area)
@@ -417,7 +417,22 @@ class Map(Room):
         for _ in repeat(None, small):
             _place(s_area)
 
-        # todo:  we need a pathfinding algorithm to see if we need to dig a path between rooms. 
+        # We want to make sure each room is connected to at least half of its neighbors.
+        for anchor in room_positions:
+            other_rooms = list(set(room_positions) - set(anchor))
+            conn_count = 0
+            for other_room in other_rooms:
+                if self.get_path_between(anchor, other_room):
+                    conn_count += 1
+
+            if conn_count < len(other_rooms)//2:
+                conn_count = 0
+                random.shuffle(other_rooms)
+                for other_room in other_rooms:
+                    if not self.get_path_between(anchor, other_room):
+                        self.dig_path_between(anchor, other_room)
+                    if conn_count >= len(other_rooms)//2:
+                        break
 
         return room_positions
 

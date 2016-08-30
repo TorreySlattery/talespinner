@@ -200,6 +200,17 @@ class MapTestCase(TestCase):
         placed_coordinates = self.map.populate(large=1, medium=0, small=0)
         self.assertNotEqual(placed_coordinates, [])
 
+        default_map = Map()
+        self.assertNotEqual(default_map.anchor_coords, [])
+
+        for anchor in default_map.anchor_coords:
+            other_rooms = list(set(default_map.anchor_coords) - set(anchor))
+            neighbor_count = 0
+            for other_room in other_rooms:
+                if default_map.get_path_between(anchor, other_room):
+                    neighbor_count += 1
+            self.assertGreaterEqual(neighbor_count, len(other_rooms)//2)
+
     def test_place(self):
         tiny_room = [[1]]
         x,y = self.map.place(tiny_room)
