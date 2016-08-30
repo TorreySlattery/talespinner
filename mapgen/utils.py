@@ -80,7 +80,7 @@ class Room(object):
         room_data.save()
         return room_data
 
-    def is_path_clear_between(self, source, dest):
+    def get_path_between(self, source, dest):
         """
         Tries to determine whether there is a continuous arrangement of non-blocked spaces connecting two positions
         using an implementation of Dijkstra's algorithm and a min-priority queue.
@@ -102,7 +102,7 @@ class Room(object):
             try:
                 # Up
                 if self.room[_y+1][_x] > 0:
-                    nearby.append(((_x,_y+1), 0))
+                    nearby.append(((_x,_y+1), (0,1)))
             except IndexError:
                 pass  # pythonic index checking is weird
 
@@ -110,7 +110,7 @@ class Room(object):
                 # Down
                 if _y-1 >= 0:
                     if self.room[_y-1][_x] > 0:
-                        nearby.append(((_x, _y-1), 2))
+                        nearby.append(((_x, _y-1), (0,-1)))
             except IndexError:
                 pass
 
@@ -118,14 +118,14 @@ class Room(object):
                 # Left
                 if _x-1 >= 0:
                     if self.room[_y][_x-1] > 0:
-                        nearby.append(((_x-1, _y), 3))
+                        nearby.append(((_x-1, _y), (-1,0)))
             except IndexError:
                 pass
 
             try:
                 # Right
                 if self.room[_y][_x+1] > 0:
-                    nearby.append(((_x+1, _y), 1))
+                    nearby.append(((_x+1, _y), (1,0)))
             except IndexError:
                 pass
 
@@ -146,7 +146,17 @@ class Room(object):
             u = unvisited.pop_task()
             if u == dest:
                 # Found our destination
-                return dist, prev
+                path = []
+                last_spot = dest
+                while True:
+                    path.append(last_spot)
+                    try:
+                        lx, ly = last_spot
+                        dx, dy = prev[last_spot]
+                        last_spot = (lx-dx, ly-dy)
+                    except KeyError:
+                        # We've grabbed all of our path values
+                        return dist, path
             elif dist[u] == sys.maxsize:
                 # The only remaining nodes aren't connected to the start point.
                 return False
@@ -154,11 +164,11 @@ class Room(object):
                 alt = dist[u] + 1
                 if alt < dist[neighbor]:
                     dist[neighbor] = alt
-                    prev[neighbor] = (dist[u], direction)
+                    prev[neighbor] = direction
                     unvisited.add_task(neighbor, priority=alt)
 
-        # Todo: We really only care about getting *a* shortest path. Also todo: rename the function
-        return dist, prev
+        # If we somehow get here, we've failed. 
+        return False
 
     def dig_path(self, pos1, pos2):
         """

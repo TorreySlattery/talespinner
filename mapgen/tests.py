@@ -64,23 +64,20 @@ class RoomTestCase(TestCase):
         self.assertEqual(self.room.width, room_obj.width)
         self.assertEqual(self.room.height, room_obj.height)
 
-    def test_is_path_clear_between(self):
+    def test_get_path_between(self):
         bl = (0, 0)
         tr = (2, 2)
         # A completely dug out room, thus, multiple shortests paths.
         self.sroom.room = [[1, 1, 1],
                            [1, 1, 1],
                            [1, 1, 1]]
-        dist, prev = self.sroom.is_path_clear_between(bl, tr)
-        print(dist)
-        print(prev)
-        self.assertTrue(self.sroom.is_path_clear_between(bl, tr))
+        self.assertTrue(self.sroom.get_path_between(bl, tr))
 
         # A wall runs the full height of the room, making the destination unreachable.
         self.sroom.room = [[1, 0, 1],
                            [1, 0, 1],
                            [1, 0, 1]]
-        self.assertFalse(self.sroom.is_path_clear_between(bl, tr))
+        self.assertFalse(self.sroom.get_path_between(bl, tr))
 
         # A wall runs most of the height of the room, eliminating all but one path
         self.sroom.room = [[1, 0, 1],
@@ -88,7 +85,7 @@ class RoomTestCase(TestCase):
                            [1, 1, 1]]
 
         br = (2, 0)
-        self.assertTrue(self.sroom.is_path_clear_between(bl, br))
+        self.assertTrue(self.sroom.get_path_between(bl, br))
 
 class MazeTestCase(TestCase):
     def setUp(self):
