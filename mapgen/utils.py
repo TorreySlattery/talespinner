@@ -372,15 +372,16 @@ class Map(Room):
     """
 
     def __init__(self, **kwargs):
-        kwargs['width'] = kwargs.get('width', 100)
-        kwargs['height'] = kwargs.get('height', 100)
+        kwargs['width'] = kwargs.get('width', 40)
+        kwargs['height'] = kwargs.get('height', 40)
         super().__init__(**kwargs)
-        large = kwargs.get('large', 1)
-        medium = kwargs.get('medium', 2)
-        small = kwargs.get('small', 4)
-        self.anchor_coords = self.populate(large, medium, small)
+        num_l = kwargs.get('num_l', 1)
+        num_m = kwargs.get('num_m', 2)
+        num_s = kwargs.get('num_s', 4)
+        self.anchor_coords = self.populate(num_l, num_m, num_s)
+        print("Map created with anchor coordinates: {}".format(self.anchor_coords))
 
-    def populate(self, large, medium, small):
+    def populate(self, num_l, num_m, num_s):
         """
         Takes whatever parameters we come up with and builds an assortment of Rooms
 
@@ -408,31 +409,15 @@ class Map(Room):
                 return True
             return False
 
-        for _ in repeat(None, large):
+        for _ in repeat(None, num_l):
             _place(l_area)
 
-        for _ in repeat(None, medium):
+        for _ in repeat(None, num_m):
             _place(m_area)
 
-        for _ in repeat(None, small):
+        for _ in repeat(None, num_s):
             _place(s_area)
 
-        # We want to make sure each room is connected to at least half of its neighbors.
-        for anchor in room_positions:
-            other_rooms = list(set(room_positions) - set(anchor))
-            conn_count = 0
-            for other_room in other_rooms:
-                if self.get_path_between(anchor, other_room):
-                    conn_count += 1
-
-            if conn_count < len(other_rooms)//2:
-                conn_count = 0
-                random.shuffle(other_rooms)
-                for other_room in other_rooms:
-                    if not self.get_path_between(anchor, other_room):
-                        self.dig_path_between(anchor, other_room)
-                    if conn_count >= len(other_rooms)//2:
-                        break
 
         return room_positions
 
@@ -444,7 +429,7 @@ class Map(Room):
             room: a list of lists containing various map values
 
         Returns:
-            True if the room was placed successfully, False otherwise
+            x,y tuple of a dug space if the room was placed successfully, False otherwise
         """
         def _place(posx, posy):
             for idx_r, row in enumerate(room):  # I should work on my naming conventions -.-
@@ -456,9 +441,8 @@ class Map(Room):
             rx = random.randint(0, self.width-1)
             ry = random.randint(0, self.height-1)
             if self.check_available((rx,ry), room):
-                # Replace values and return the anchor point
                 _place(rx,ry)
-                return (rx, ry)
+                return (rx,ry)
 
         # If we couldn't place the room randomly, try a brute force approach
         from_edge = random.randint(0,3)

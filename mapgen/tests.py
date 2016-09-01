@@ -197,17 +197,23 @@ class MapTestCase(TestCase):
                          [0, 0, 0]] # <-North end
 
     def test_populate(self):
-        placed_coordinates = self.map.populate(large=1, medium=0, small=0)
+        placed_coordinates = self.map.populate(num_l=1, num_m=0, num_s=0)
         self.assertNotEqual(placed_coordinates, [])
 
-        default_map = Map()
+        default_map = Map(seed="the World Tree")
+        print(default_map)
         self.assertNotEqual(default_map.anchor_coords, [])
 
+        print("(TEST) Overall coords: {}".format(default_map.anchor_coords))
         for anchor in default_map.anchor_coords:
-            other_rooms = list(set(default_map.anchor_coords) - set(anchor))
+            print("(TEST) Current anchor: {}".format(anchor))
+            other_rooms = list(set(default_map.anchor_coords) - {anchor})
             neighbor_count = 0
+            print("(TEST) Other rooms: {}".format(other_rooms))
             for other_room in other_rooms:
+                print("(TEST) Other room: {}".format(other_room))
                 if default_map.get_path_between(anchor, other_room):
+                    print("Found a path between {} and {}".format(anchor, other_room))
                     neighbor_count += 1
             self.assertGreaterEqual(neighbor_count, len(other_rooms)//2)
 
