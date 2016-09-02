@@ -376,14 +376,14 @@ class Map(Room):
     """
 
     def __init__(self, **kwargs):
-        kwargs['width'] = kwargs.get('width', 40)
-        kwargs['height'] = kwargs.get('height', 40)
+        kwargs.setdefault('width', 40)
+        kwargs.setdefault('height', 40)
         super().__init__(**kwargs)
-        num_l = kwargs.get('num_l', 1)
-        num_m = kwargs.get('num_m', 2)
-        num_s = kwargs.get('num_s', 4)
-        self.anchor_coords = self.populate(num_l, num_m, num_s)
-        print("Map created with anchor coordinates: {}".format(self.anchor_coords))
+        if not kwargs.get('slumber'):
+            num_l = kwargs.get('num_l', 1)
+            num_m = kwargs.get('num_m', 2)
+            num_s = kwargs.get('num_s', 4)
+            self.anchor_coords = self.populate(num_l, num_m, num_s)
 
     def populate(self, num_l, num_m, num_s):
         """
@@ -439,8 +439,9 @@ class Map(Room):
             for idx_r, row in enumerate(room):  # I should work on my naming conventions -.-
                 for idx_c, col in enumerate(row):
                     if room[idx_r][idx_c] > 0:  # undug spaces might overwrite previous placements, like layering jpgs
+                        if self.room[idx_r+posy][idx_c+posx] < 1:
+                            self.area += 1
                         self.room[idx_r+posy][idx_c+posx] = room[idx_r][idx_c]
-                        self.area += 1
 
         for _ in range(retries):
             rx = random.randint(0, self.width-1)

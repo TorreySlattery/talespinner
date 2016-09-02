@@ -191,7 +191,7 @@ class CaveTestCase(TestCase):
 class MapTestCase(TestCase):
 
     def setUp(self):
-        self.map =  Map(width=3, height=3)
+        self.map =  Map(width=3, height=3, slumber=True)
         self.map.room = [[0, 0, 0],
                          [0, 0, 0],
                          [0, 0, 0]] # <-North end
@@ -202,11 +202,20 @@ class MapTestCase(TestCase):
 
         default_map = Map(seed="the World Tree")
         self.assertNotEqual(default_map.anchor_coords, [])
-        # todo: rework how we test populate() once it's been rewritten
+
+        area = 0
+        for row in default_map.room:
+            for col in row:
+                if col > 0: # if dug out
+                    area += 1
+
+        self.assertEqual(area, default_map.area)
 
     def test_place(self):
         tiny_room = [[1]]
-        x,y = self.map.place(tiny_room)
+        coords = self.map.place(tiny_room)
+        self.assertTrue(coords)
+        x,y = coords
         self.assertEqual(self.map.room[y][x], 1)
 
     def test_check_available(self):
@@ -217,10 +226,11 @@ class MapTestCase(TestCase):
         self.assertFalse(self.map.check_available((2,0), room1))
         self.assertFalse(self.map.check_available((0, 2), room1))
 
-        map2 = Map(width=3, height=3)
+        map2 = Map(width=3, height=3, slumber=True)
         map2.room = [[0, 0, 0],
                      [0, 1, 0],
                      [0, 0, 0]]
+        map2.area = 1
 
         self.assertFalse(map2.check_available((0,0), room1))
         self.assertFalse(map2.check_available((0,1), room1))
