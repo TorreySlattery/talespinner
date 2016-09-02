@@ -201,21 +201,8 @@ class MapTestCase(TestCase):
         self.assertNotEqual(placed_coordinates, [])
 
         default_map = Map(seed="the World Tree")
-        print(default_map)
         self.assertNotEqual(default_map.anchor_coords, [])
-
-        print("(TEST) Overall coords: {}".format(default_map.anchor_coords))
-        for anchor in default_map.anchor_coords:
-            print("(TEST) Current anchor: {}".format(anchor))
-            other_rooms = list(set(default_map.anchor_coords) - {anchor})
-            neighbor_count = 0
-            print("(TEST) Other rooms: {}".format(other_rooms))
-            for other_room in other_rooms:
-                print("(TEST) Other room: {}".format(other_room))
-                if default_map.get_path_between(anchor, other_room):
-                    print("Found a path between {} and {}".format(anchor, other_room))
-                    neighbor_count += 1
-            self.assertGreaterEqual(neighbor_count, len(other_rooms)//2)
+        # todo: rework how we test populate() once it's been rewritten
 
     def test_place(self):
         tiny_room = [[1]]

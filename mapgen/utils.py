@@ -281,8 +281,8 @@ class Cave(Room):
     """
     def __init__(self, **kwargs):
         # Give plenty of room to grow, as we expect to shrinkwrap the finished product
-        kwargs.update({'height': 200})
-        kwargs.update({'width': 200})
+        kwargs['height'] = kwargs.get('height', 200)
+        kwargs['width'] = kwargs.get('width', 200)
         super().__init__(**kwargs)
         x,y = self.width//2, self.height//2
         self.room[y][x] = 1
@@ -304,6 +304,10 @@ class Cave(Room):
             else:
                 break
         self.room, self.area = best_map
+
+    def __str__(self):
+        self.set_shrinkwrapped()
+        return super().__str__()
 
     def reset(self, start):
         super().reset()
@@ -436,6 +440,7 @@ class Map(Room):
                 for idx_c, col in enumerate(row):
                     if room[idx_r][idx_c] > 0:  # undug spaces might overwrite previous placements, like layering jpgs
                         self.room[idx_r+posy][idx_c+posx] = room[idx_r][idx_c]
+                        self.area += 1
 
         for _ in range(retries):
             rx = random.randint(0, self.width-1)
@@ -495,13 +500,21 @@ class Map(Room):
         if x + rw > self.width or y + rh > self.height:
             return False
 
+        if not self.area:
+            return True
+
+        overlap_points = 0
         for idx_y, row in enumerate(room):
             for idx_x, col in enumerate(row):
                 ox = x + idx_x
                 oy = y + idx_y
                 if room[idx_y][idx_x] > 0: #todo: go back and change others like this so we can use negative values
                     if self.room[oy][ox] > 0:
-                        return False
+                        overlap_points += 1
+
+        # The comparison value will need tweaking, but we want some overlap, but not too much if possible.
+        if not overlap_points or overlap_points > (self.width * self.height) // 20:
+            return False
 
         return True
 
