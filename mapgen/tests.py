@@ -1,3 +1,5 @@
+import sys
+
 from django.test import TestCase
 
 from mapgen.geometry import Rectangle
@@ -40,6 +42,7 @@ class GeometryTestCase(TestCase):
 class RoomTestCase(TestCase):
     def setUp(self):
         self.room = Room()
+        self.sroom = Room(width=3, height=3)
 
     def test_width(self):
         for row in self.room.room:
@@ -60,6 +63,29 @@ class RoomTestCase(TestCase):
 
         self.assertEqual(self.room.width, room_obj.width)
         self.assertEqual(self.room.height, room_obj.height)
+
+    def test_get_path_between(self):
+        bl = (0, 0)
+        tr = (2, 2)
+        # A completely dug out room, thus, multiple shortests paths.
+        self.sroom.room = [[1, 1, 1],
+                           [1, 1, 1],
+                           [1, 1, 1]]
+        self.assertTrue(self.sroom.get_path_between(bl, tr))
+
+        # A wall runs the full height of the room, making the destination unreachable.
+        self.sroom.room = [[1, 0, 1],
+                           [1, 0, 1],
+                           [1, 0, 1]]
+        self.assertFalse(self.sroom.get_path_between(bl, tr))
+
+        # A wall runs most of the height of the room, eliminating all but one path
+        self.sroom.room = [[1, 0, 1],
+                           [1, 0, 1],
+                           [1, 1, 1]]
+
+        br = (2, 0)
+        self.assertTrue(self.sroom.get_path_between(bl, br))
 
 class MazeTestCase(TestCase):
     def setUp(self):
@@ -131,8 +157,8 @@ class CaveTestCase(TestCase):
         min_cave = Cave(min_area = 15)
         self.assertGreaterEqual(min_cave.area, 15)
 
-        too_high_min_cave = Cave(width=10, height=10, min_area=2000)
-        self.assertNotEqual(too_high_min_cave.min_area, 2000)
+        too_high_min_cave = Cave(width=10, height=10, min_area=sys.maxsize)
+        self.assertNotEqual(too_high_min_cave.min_area, sys.maxsize)
 
     def test_area(self):
         seed = "A rather unremarkable seed"
@@ -165,18 +191,31 @@ class CaveTestCase(TestCase):
 class MapTestCase(TestCase):
 
     def setUp(self):
-        self.map =  Map(width=3, height=3)
+        self.map =  Map(width=3, height=3, slumber=True)
         self.map.room = [[0, 0, 0],
                          [0, 0, 0],
                          [0, 0, 0]] # <-North end
 
     def test_populate(self):
-        placed_coordinates = self.map.populate()
+        placed_coordinates = self.map.populate(num_l=1, num_m=0, num_s=0)
         self.assertNotEqual(placed_coordinates, [])
+
+        default_map = Map(seed="the World Tree")
+        self.assertNotEqual(default_map.anchor_coords, [])
+
+        area = 0
+        for row in default_map.room:
+            for col in row:
+                if col > 0: # if dug out
+                    area += 1
+
+        self.assertEqual(area, default_map.area)
 
     def test_place(self):
         tiny_room = [[1]]
-        x,y = self.map.place(tiny_room)
+        coords = self.map.place(tiny_room)
+        self.assertTrue(coords)
+        x,y = coords
         self.assertEqual(self.map.room[y][x], 1)
 
     def test_check_available(self):
@@ -187,10 +226,11 @@ class MapTestCase(TestCase):
         self.assertFalse(self.map.check_available((2,0), room1))
         self.assertFalse(self.map.check_available((0, 2), room1))
 
-        map2 = Map(width=3, height=3)
+        map2 = Map(width=3, height=3, slumber=True)
         map2.room = [[0, 0, 0],
                      [0, 1, 0],
                      [0, 0, 0]]
+        map2.area = 1
 
         self.assertFalse(map2.check_available((0,0), room1))
         self.assertFalse(map2.check_available((0,1), room1))

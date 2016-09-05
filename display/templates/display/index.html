@@ -4,12 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Talespinner - {{title|default:"Index"}}</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'display/style.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'display/css/style.css' %}" />
+    <script src="{% static 'display/js/jquery-3.1.0.min.js' %}"></script>
 </head>
 <body>
     Todo: Set up template inheritance so we don't just run a single monolithic html file
-    <table id="map-table">
-    {% for row in view.get_room %}
+    Seed for this map: {{ map_seed|default:"Unknown" }}
+    <table id="map-table" style="min-width: {{min_width|default:0}}px;">
+    {% for row in map_room %}
     <tr>
         {% for col in row %}
         <td class="{{ col|convert }}"></td>

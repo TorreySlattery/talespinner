@@ -1,5 +1,8 @@
 import random
 import sys
+from itertools import repeat, count
+from collections import OrderedDict
+from heapq import heappush, heappop
 
 from mapgen.models import RoomData
 
@@ -77,6 +80,139 @@ class Room(object):
         room_data.save()
         return room_data
 
+    def get_path_between(self, source, dest):
+        """
+        Tries to determine whether there is a continuous arrangement of non-blocked spaces connecting two positions
+        using an implementation of Dijkstra's algorithm and a min-priority queue.
+
+        Args:
+            pos1: the x,y coordinate tuple to start from
+            pos2: the x,y coordinate tuple of the destination
+        """
+
+        x1, y1 = source
+        x2, y2 = dest
+        if self.room[y1][x1] < 0 or self.room[y2][x2] < 0: # Can't pathfind if we're starting blocked off
+            return False
+
+        def get_neighbors(_pos):
+            nearby = []
+            _x, _y = _pos
+
+            try:
+                # Up
+                if self.room[_y+1][_x] > 0:
+                    nearby.append(((_x,_y+1), (0,1)))
+            except IndexError:
+                pass  # pythonic index checking is weird
+
+            try:
+                # Down
+                if _y-1 >= 0:
+                    if self.room[_y-1][_x] > 0:
+                        nearby.append(((_x, _y-1), (0,-1)))
+            except IndexError:
+                pass
+
+            try:
+                # Left
+                if _x-1 >= 0:
+                    if self.room[_y][_x-1] > 0:
+                        nearby.append(((_x-1, _y), (-1,0)))
+            except IndexError:
+                pass
+
+            try:
+                # Right
+                if self.room[_y][_x+1] > 0:
+                    nearby.append(((_x+1, _y), (1,0)))
+            except IndexError:
+                pass
+
+            # B,A Start
+            return nearby
+
+        dist = dict()
+        prev = dict()
+        unvisited = PriorityQueue()
+
+        for x in range(self.width):
+            for y in range(self.height):
+                dist[(x,y)] = sys.maxsize
+                unvisited.add_task((x,y), priority=sys.maxsize)
+        dist[source] = 0
+
+        while unvisited:
+            u = unvisited.pop_task()
+            if u == dest:
+                # Found our destination
+                path = []
+                last_spot = dest
+                while True:
+                    path.append(last_spot)
+                    try:
+                        lx, ly = last_spot
+                        dx, dy = prev[last_spot]
+                        last_spot = (lx-dx, ly-dy)
+                    except KeyError:
+                        # We've grabbed all of our path values
+                        return dist, path
+            elif dist[u] == sys.maxsize:
+                # The only remaining nodes aren't connected to the start point.
+                return False
+            for neighbor, direction in get_neighbors(u):
+                alt = dist[u] + 1
+                if alt < dist[neighbor]:
+                    dist[neighbor] = alt
+                    prev[neighbor] = direction
+                    unvisited.add_task(neighbor, priority=alt)
+
+        # If we somehow get here, we've failed. 
+        return False
+
+    def dig_path_between(self, pos1, pos2):
+        """
+        Digs a path between two points in the Room
+
+        Args:
+            pos1: the x,y coordinate tuple to start from
+            pos2: the x,y coordinate tuple of the destination
+
+        Returns:
+            True if it dug a path, False otherwise, which only happens if we tried to access an invalid index
+        """
+
+        # Start with an as-the-crow-flies approach: draw a line between pos1 & pos2
+
+        x1,y1 = pos1
+        x2,y2 = pos2
+
+        try:
+            if x2-x1 == 0:
+                top = max(y1, y2)
+                bottom = min(y1, y2)
+                for y in range(bottom, top+1):
+                    self.room[y][x1] = 1
+                return True
+
+            m = float(y2-y1)/float(x2-x1)
+            left = min(x1, x2)
+            right = max(x1, x2)
+
+            y_previous = round(left * m)
+            for x in range(left, right+1):
+                y = round(x*m)
+                self.room[y][x] = 1
+
+                # We need to widen the tunnel when we cut through a diagonal
+                if y_previous != y:
+                    self.room[y_previous][x] = 1
+                y_previous = y
+
+            return True
+        except IndexError:
+            return False
+
 
 class Maze(Room):
     def __init__(self, **kwargs):
@@ -138,24 +274,15 @@ class Maze(Room):
         random.shuffle(directions)
         return directions
 
-    def dig_path(self, pos1, pos2):
-        """
-        Digs a path between two points in the Room
-
-        Args:
-            pos1: the x,y coordinate tuple to start from
-            pos2: the x,y coordinate tuple of the destination
-
-        Returns:
-            True if it found a path, False otherwise
-        """
-        pass
 
 class Cave(Room):
     """
     Represents a room with staggered walls and possibly internal structures
     """
     def __init__(self, **kwargs):
+        # Give plenty of room to grow, as we expect to shrinkwrap the finished product
+        kwargs['height'] = kwargs.get('height', 200)
+        kwargs['width'] = kwargs.get('width', 200)
         super().__init__(**kwargs)
         x,y = self.width//2, self.height//2
         self.room[y][x] = 1
@@ -177,6 +304,10 @@ class Cave(Room):
             else:
                 break
         self.room, self.area = best_map
+
+    def __str__(self):
+        self.set_shrinkwrapped()
+        return super().__str__()
 
     def reset(self, start):
         super().reset()
@@ -245,46 +376,56 @@ class Map(Room):
     """
 
     def __init__(self, **kwargs):
-        kwargs['width'] = kwargs.get('width', 140)
-        kwargs['height'] = kwargs.get('height', 30)
+        kwargs.setdefault('width', 40)
+        kwargs.setdefault('height', 40)
         super().__init__(**kwargs)
-        anchor_coords = self.populate()
+        if not kwargs.get('slumber'):
+            num_l = kwargs.get('num_l', 1)
+            num_m = kwargs.get('num_m', 2)
+            num_s = kwargs.get('num_s', 4)
+            self.anchor_coords = self.populate(num_l, num_m, num_s)
 
-    def populate(self, retries=100):
+    def populate(self, num_l, num_m, num_s):
         """
         Takes whatever parameters we come up with and builds an assortment of Rooms
 
         Args:
-            retries: how many random positioning attempts we make before resorting to brute force
+            large: a positive integer of how many large rooms to try to place
+            medium: a positive integer of how many medium rooms to try to place
+            small: a positive integer of how many small rooms to try to place
 
         Returns:
             A list of anchor coordinates of rooms successfully placed
 
         """
         room_positions = []
-        large_width = self.width//2
-        large_height = self.height//2
+        dimensions = self.width * self.height
+        l_area = max(dimensions//6, 1)
+        m_area = max(dimensions//12, 1)
+        s_area = max(dimensions//24, 1)
 
-        med_width = self.width//5
-        med_height = self.height//5
+        def _place(area):
+            c = Cave(min_area=area)
+            c.set_shrinkwrapped()
+            success = self.place(c.room)
+            if success:
+                room_positions.append(success)
+                return True
+            return False
 
-        sm_width = self.width//10
-        sm_height = self.height//10
+        for _ in repeat(None, num_l):
+            _place(l_area)
 
-        for x in range(5): # We'll need to figure out how to balance number vs size based on Map dimensions
-            c_seed = random.randint(0, sys.maxsize)
-            c = Cave(seed=c_seed, width=large_width, height=large_height)
-            for _ in range(retries):
-                success = self.place(c.room)
-                if success:
-                    room_positions.append(success)
-                    break
-            #todo: If we get to here, we need to try to brute force a placement. If that also fails, we need to scale
-            # down the size of the Room we're trying to insert.
+        for _ in repeat(None, num_m):
+            _place(m_area)
+
+        for _ in repeat(None, num_s):
+            _place(s_area)
+
 
         return room_positions
 
-    def place(self, room):
+    def place(self, room, retries=10):
         """
         Takes a 2D list of values and attempts to place it without collisions in the room property
 
@@ -292,17 +433,50 @@ class Map(Room):
             room: a list of lists containing various map values
 
         Returns:
-            True if the room was placed successfully, False otherwise
+            x,y tuple of a dug space if the room was placed successfully, False otherwise
         """
-        rx = random.randint(0, self.width-1)
-        ry = random.randint(0, self.height-1)
-        if self.check_available((rx,ry), room):
-            # Replace values and return the anchor point
+        def _place(posx, posy):
             for idx_r, row in enumerate(room):  # I should work on my naming conventions -.-
                 for idx_c, col in enumerate(row):
                     if room[idx_r][idx_c] > 0:  # undug spaces might overwrite previous placements, like layering jpgs
-                        self.room[idx_r+ry][idx_c+rx] = room[idx_r][idx_c]
-            return (rx,ry)
+                        if self.room[idx_r+posy][idx_c+posx] < 1:
+                            self.area += 1
+                        self.room[idx_r+posy][idx_c+posx] = room[idx_r][idx_c]
+
+        for _ in range(retries):
+            rx = random.randint(0, self.width-1)
+            ry = random.randint(0, self.height-1)
+            if self.check_available((rx,ry), room):
+                _place(rx,ry)
+                return (rx,ry)
+
+        # If we couldn't place the room randomly, try a brute force approach
+        from_edge = random.randint(0,3)
+
+        if from_edge == 0:  # left
+            for yy in range(self.height):
+                for xx in range(self.width):
+                    if self.check_available((xx, yy), room):
+                        _place(xx, yy)
+                        return (xx, yy)
+        elif from_edge == 1:  # top
+            for xx in range(self.width):
+                for yy in reversed(range(self.height)):
+                    if self.check_available((xx, yy), room):
+                        _place(xx, yy)
+                        return (xx, yy)
+        elif from_edge == 2:  # right
+            for xx in reversed(range(self.width)):
+                for yy in range(self.height):
+                    if self.check_available((xx, yy), room):
+                        _place(xx, yy)
+                        return (xx, yy)
+        else:
+            for yy in reversed(range(self.height)):
+                for xx in range(self.width):
+                    if self.check_available((xx, yy), room):
+                        _place(xx, yy)
+                        return (xx, yy)
 
         return False
 
@@ -327,13 +501,52 @@ class Map(Room):
         if x + rw > self.width or y + rh > self.height:
             return False
 
+        if not self.area:
+            return True
+
+        overlap_points = 0
         for idx_y, row in enumerate(room):
             for idx_x, col in enumerate(row):
                 ox = x + idx_x
                 oy = y + idx_y
                 if room[idx_y][idx_x] > 0: #todo: go back and change others like this so we can use negative values
                     if self.room[oy][ox] > 0:
-                        return False
+                        overlap_points += 1
+
+        # The comparison value will need tweaking, but we want some overlap, but not too much if possible.
+        if not overlap_points or overlap_points > (self.width * self.height) // 20:
+            return False
 
         return True
+
+
+class PriorityQueue():
+    """
+    https://docs.python.org/3/library/heapq.html#priority-queue-implementation-notes
+    """
+    pq = []
+    entry_finder = {}
+    REMOVED = '<removed-task>'
+    counter = count()
+
+    def add_task(self, task, priority=0):
+        if task in self.entry_finder:
+            self.remove_task(task)
+        count = next(self.counter)
+        entry = [priority, count, task]
+        self.entry_finder[task] = entry
+        heappush(self.pq, entry)
+
+    def remove_task(self, task):
+        entry = self.entry_finder.pop(task)
+        entry[-1] = self.REMOVED
+
+    def pop_task(self):
+        while self.pq:
+            priority, count, task = heappop(self.pq)
+            if task is not self.REMOVED:
+                del self.entry_finder[task]
+                return task
+        raise KeyError("pop from an empty priority queue")
+
 
