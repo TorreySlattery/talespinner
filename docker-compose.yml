@@ -1,0 +1,35 @@
+version: '2'
+
+services:
+  db:
+    image: postgres
+    environment: 
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      -  db
+  manage:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: shell_plus
+    depends_on:
+      - db
+    entrypoint: /usr/local/bin/python manage.py
+    volumes:
+      - .:/code
+  tests:
+    build: .
+    volumes:
+      - .:/compendium_5e_service/
+    entrypoint: /usr/local/bin/python
+    command: manage.py test
+    restart: 'no'
