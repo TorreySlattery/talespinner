@@ -40,6 +40,7 @@ DAMAGE_CHOICIES = [
     ("thunder", "thunder"),
 ]
 
+
 class Race(models.Model):
     type = models.CharField(max_length=255, null=False, blank=False)
     subtype = models.CharField(max_length=255, null=True, blank=True)
@@ -209,7 +210,14 @@ class CreatureTemplate(models.Model):
 
 class Action(models.Model):
     """A human-readable list of things from the stat block."""
-    template = models.ForeignKey(CreatureTemplate, null=True, blank=False, related_name="actions", on_delete=models.CASCADE)
+
+    template = models.ForeignKey(
+        CreatureTemplate,
+        null=True,
+        blank=False,
+        related_name="actions",
+        on_delete=models.CASCADE,
+    )
     name = models.CharField(max_length=255, null=False, blank=False)
     description = models.TextField(null=True)
 
@@ -219,14 +227,31 @@ class Action(models.Model):
 
 class Attack(models.Model):
     """A collection of data to represent attacks from the Actions block."""
-    template = models.ForeignKey(CreatureTemplate, null=True, blank=False, related_name="attacks", on_delete=models.CASCADE)
+
+    template = models.ForeignKey(
+        CreatureTemplate,
+        null=True,
+        blank=False,
+        related_name="attacks",
+        on_delete=models.CASCADE,
+    )
     name = models.CharField(max_length=255, null=False, blank=False)
     description = models.TextField(null=True)
     to_hit_mod = models.PositiveSmallIntegerField(blank=False, null=False, default=3)
     num_dice = models.PositiveSmallIntegerField(blank=False, null=False, default=1)
-    die_step = models.PositiveSmallIntegerField(blank=False, null=False, default=6, help_text="Basically the number of sides on the die")
+    die_step = models.PositiveSmallIntegerField(
+        blank=False,
+        null=False,
+        default=6,
+        help_text="Basically the number of sides on the die",
+    )
     dmg_mod = models.SmallIntegerField(blank=False, null=False, default=2)
-    dmg_avg = models.SmallIntegerField(blank=False, null=False, default=4, help_text="For when people don't like rolling.")
+    dmg_avg = models.SmallIntegerField(
+        blank=False,
+        null=False,
+        default=4,
+        help_text="For when people don't like rolling.",
+    )
     dmg_type = models.CharField(max_length=255, choices=DAMAGE_CHOICIES)
     dmg_is_magic = models.BooleanField(blank=False, null=False, default=False)
 
