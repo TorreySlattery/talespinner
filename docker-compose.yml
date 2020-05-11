@@ -29,7 +29,7 @@ services:
   tests:
     build: .
     volumes:
-      - .:/compendium_5e_service/
+      - .:/talespinner/
     entrypoint: /usr/local/bin/python
     command: manage.py test
     restart: 'no'
