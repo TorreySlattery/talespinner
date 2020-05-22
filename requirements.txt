@@ -4,3 +4,4 @@ djangorestframework==3.11.0
 ipython
 django-extensions==2.1.6
 black
+requests
