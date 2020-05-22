@@ -146,6 +146,7 @@ class CreatureTemplate(models.Model):
 
     name = models.CharField(max_length=255, null=False, blank=False)
     size = models.CharField(max_length=5, choices=SIZE_CHOICES, default="M")
+    race = models.ForeignKey(Race, null=True, blank=True, on_delete=models.SET_NULL)
     str = models.PositiveSmallIntegerField(null=False, blank=False, default=10)
     dex = models.PositiveSmallIntegerField(null=False, blank=False, default=10)
     con = models.PositiveSmallIntegerField(null=False, blank=False, default=10)
