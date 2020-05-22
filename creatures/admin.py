@@ -7,6 +7,20 @@ class CreatureInline(admin.TabularInline):
     extra = 0
 
 
+class EncounterInline(admin.TabularInline):
+    model = models.Encounter
+    extra = 0
+
+
+@admin.register(models.EncounterGroup)
+class EncounterGroupAdmin(admin.ModelAdmin):
+    list_display = (
+        "name",
+        "description",
+    )
+    inlines = (EncounterInline,)
+
+
 @admin.register(models.Encounter)
 class EncounterAdmin(admin.ModelAdmin):
     list_display = (
@@ -63,3 +77,11 @@ class AttackAdmin(admin.ModelAdmin):
         "name",
         "description",
     )
+
+@admin.register(models.Race)
+class RaceAdmin(admin.ModelAdmin):
+    list_display = (
+        "type",
+        "subtype",
+    )
+
