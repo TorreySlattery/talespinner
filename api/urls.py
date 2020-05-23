@@ -6,5 +6,6 @@ import api.views
 
 router = DefaultRouter()
 router.register("encounters", api.views.EncounterViewSet)
+router.register("encounter-groups", api.views.EncounterGroupViewSet)
 
 urlpatterns = [path("", include(router.urls))]

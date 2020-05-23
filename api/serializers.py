@@ -66,3 +66,11 @@ class EncounterSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Encounter
         fields = "__all__"
+
+
+class EncounterGroupSerializer(serializers.ModelSerializer):
+    encounters = EncounterSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = models.EncounterGroup
+        fields = "__all__"
