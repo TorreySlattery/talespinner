@@ -1,5 +1,14 @@
-<html>
-<body>
-{{ data }}
-</body>
-</html>
+{% extends "frontend/base.html" %}
+
+{% block title %}Talespinner: Encounters{% endblock %}
+
+{% block content %}
+<div id="encounter-groups">
+    Encounters
+    <select>
+        {% for encounter in encounters %}
+        <option value="{{encounter.id}}">{{encounter.name}}</option>
+        {% endfor %}
+    </select>
+</div>
+{% endblock %}

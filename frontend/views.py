@@ -7,12 +7,13 @@ from django.shortcuts import render
 
 from talespinner import constants
 
+"""
+In general, the idea here is to treat the frontend as if it were an external client that has to consume the
+endpoint response like anyone else would, so no reverse() calls to the api urls or direct model access, etc.
+"""
+
 
 class EncounterView(TemplateView):
-    """
-    In general, the idea here is to treat the frontend as if it were an external client that has to consume the
-    endpoint response like anyone else would, so no reverse() calls or direct model access, etc.
-    """
     template_name = "frontend/encounters.html"
 
     def get(self, request, *args, **kwargs):
@@ -24,6 +25,6 @@ class EncounterView(TemplateView):
 
         response = requests.get(url)
         data = response.json()
-        context["data"] = data
+        context["encounters"] = data
 
         return render(request, self.template_name, context)
