@@ -11,4 +11,28 @@
         {% endfor %}
     </select>
 </div>
+<div>
+    {% for encounter_group in encounter_groups %}
+    <h2>{{ encounter_group.name }}</h2>
+        {% for encounter in encounter_group.encounters %}
+            <ul>
+            {% for creature in encounter.creatures %}
+                <li><h3>{{ creature.display_name }}</h3></li>
+                <ul>
+                    <li>Cnrrent HP: {{ creature.current_hp }}</li>
+                    <li>Alignment: {{ creature.alignment }}</li>
+                    <li>Current Initiative: {{ creature.current_initiative }}</li>
+                    <li>Conditions: {{ creature.conditions }}</li>
+                    <li>Template: {{creature.template.name }} ({{creature.template.race.type}} {{creature.template.race.subtype}})</li>
+                    <ul>
+                        {% for field in creature.template %}
+                        <li>{{ field }}</li>
+                        {% endfor %}
+                    </ul>
+                </ul>
+            {% endfor %}
+            </ul>
+        {% endfor %}
+    {% endfor %}
+</div>
 {% endblock %}
