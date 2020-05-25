@@ -37,6 +37,7 @@
                                         </button>
                                     </h4>
                                 </div>
+                                @todo: ids might need to be the full hierarchy since the same creature can be in multiple encounters or even multiple encounter groups
                                 <div id="collapse-{{ encounter_group.id}}-{{ encounter.id }}-{{ creature.id }}" class="collapse" aria-labelledby="heading-{{ encounter_group.id }}-{{ encounter.id }}-{{ creature.id }}" data-parent="#collapse-{{ encounter_group.id }}-{{ encounter.id }}">
                                     <div class="card-body">
                                         <ul class="nav nav-tabs" id="creature-tablist-{{ creature.id }}" role="tablist">
@@ -53,6 +54,35 @@
                                         <div class="tab-content" id="creature-tablist-{{ creature.id }}Content">
                                           <div class="tab-pane fade show active" id="stats-creature-{{ creature.id }}" role="tabpanel" aria-labelledby="stats-tab-creature-{{ creature.id }}">
                                               Stats, AC, hp, senses, saves
+                                              <table class="table">
+                                                  <thead>
+                                                    <tr>
+                                                        <th>STR</th>
+                                                        <th>DEX</th>
+                                                        <th>CON</th>
+                                                        <th>INT</th>
+                                                        <th>WIS</th>
+                                                        <th>CHA</th>
+                                                        <th>AC</th>
+                                                        <th>HP</th>
+                                                        <th>Max HP</th>
+                                                    </tr>
+                                                  </thead>
+                                                  <tbody>
+                                                    <tr>
+                                                        <td>{{ creature.template.str }}</td>
+                                                        <td>{{ creature.template.dex }}</td>
+                                                        <td>{{ creature.template.con }}</td>
+                                                        <td>{{ creature.template.int }}</td>
+                                                        <td>{{ creature.template.wis }}</td>
+                                                        <td>{{ creature.template.cha }}</td>
+                                                        <td>{{ creature.template.ac }}</td>
+                                                        <td>{{ creature.current_hp }}</td>
+                                                        <td>{{ creature.template.max_hp }}</td>
+                                                    </tr>
+                                                  </tbody>
+
+                                              </table>
                                           </div>
                                           <div class="tab-pane fade" id="actions-creature-{{ creature.id }}" role="tabpanel" aria-labelledby="actions-tab-creature-{{ creature.id }}">
                                               Actions (maybe make a new tab for attacks)
