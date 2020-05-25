@@ -38,22 +38,21 @@
                                         </button>
                                     </h4>
                                 </div>
-                                @todo: ids might need to be the full hierarchy since the same creature can be in multiple encounters or even multiple encounter groups
                                 <div id="collapse-{{ encounter_group.id}}-{{ encounter.id }}-{{ creature.id }}" class="collapse" aria-labelledby="heading-{{ encounter_group.id }}-{{ encounter.id }}-{{ creature.id }}" data-parent="#collapse-{{ encounter_group.id }}-{{ encounter.id }}">
                                     <div class="card-body">
-                                        <ul class="nav nav-tabs" id="creature-tablist-{{ creature.id }}" role="tablist">
+                                        <ul class="nav nav-tabs" id="creature-tablist-{{ encounter_group.id}}-{{ encounter.id }}-{{ creature.id }}" role="tablist">
                                           <li class="nav-item">
-                                            <a class="nav-link active" id="stats-tab-creature-{{ creature.id }}" data-toggle="tab" href="#stats-creature-{{ creature.id }}" role="tab" aria-controls="stats-creature-{{ creature.id }}" aria-selected="true">Stats</a>
+                                            <a class="nav-link active" id="stats-tab-creature-{{ encounter_group.id}}-{{ encounter.id }}-{{ creature.id }}" data-toggle="tab" href="#stats-creature-{{ encounter_group.id}}-{{ encounter.id }}-{{ creature.id }}" role="tab" aria-controls="stats-creature-{{ encounter_group.id}}-{{ encounter.id }}-{{ creature.id }}" aria-selected="true">Stats</a>
                                           </li>
                                           <li class="nav-item">
-                                            <a class="nav-link" id="actions-tab-creature-{{ creature.id }}" data-toggle="tab" href="#actions-creature-{{ creature.id }}" role="tab" aria-controls="actions-creature-{{ creature.id }}" aria-selected="false">Actions</a>
+                                            <a class="nav-link" id="actions-tab-creature-{{ encounter_group.id}}-{{ encounter.id }}-{{ creature.id }}" data-toggle="tab" href="#actions-creature-{{ encounter_group.id}}-{{ encounter.id }}-{{ creature.id }}" role="tab" aria-controls="actions-creature-{{ encounter_group.id}}-{{ encounter.id }}-{{ creature.id }}" aria-selected="false">Actions</a>
                                           </li>
                                           <li class="nav-item">
-                                            <a class="nav-link" id="skills-tab-creature-{{ creature.id }}-tab" data-toggle="tab" href="#skills-creature-{{ creature.id }}" role="tab" aria-controls="skills-creature-{{ creature.id }}" aria-selected="false">Skills</a>
+                                            <a class="nav-link" id="skills-tab-creature-{{ encounter_group.id}}-{{ encounter.id }}-{{ creature.id }}-tab" data-toggle="tab" href="#skills-creature-{{ encounter_group.id}}-{{ encounter.id }}-{{ creature.id }}" role="tab" aria-controls="skills-creature-{{ encounter_group.id}}-{{ encounter.id }}-{{ creature.id }}" aria-selected="false">Skills</a>
                                           </li>
                                         </ul>
-                                        <div class="tab-content" id="creature-tablist-{{ creature.id }}Content">
-                                          <div class="tab-pane fade show active" id="stats-creature-{{ creature.id }}" role="tabpanel" aria-labelledby="stats-tab-creature-{{ creature.id }}">
+                                        <div class="tab-content" id="creature-tablist-{{ encounter_group.id}}-{{ encounter.id }}-{{ creature.id }}Content">
+                                          <div class="tab-pane fade show active" id="stats-creature-{{ encounter_group.id}}-{{ encounter.id }}-{{ creature.id }}" role="tabpanel" aria-labelledby="stats-tab-creature-{{ encounter_group.id}}-{{ encounter.id }}-{{ creature.id }}">
                                               Stats, AC, hp, senses, saves
                                               <table class="table">
                                                   <thead>
@@ -96,10 +95,10 @@
 
                                               </table>
                                           </div>
-                                          <div class="tab-pane fade" id="actions-creature-{{ creature.id }}" role="tabpanel" aria-labelledby="actions-tab-creature-{{ creature.id }}">
+                                          <div class="tab-pane fade" id="actions-creature-{{ encounter_group.id}}-{{ encounter.id }}-{{ creature.id }}" role="tabpanel" aria-labelledby="actions-tab-creature-{{ encounter_group.id}}-{{ encounter.id }}-{{ creature.id }}">
                                               Actions (maybe make a new tab for attacks)
                                           </div>
-                                          <div class="tab-pane fade" id="skills-creature-{{ creature.id }}" role="tabpanel" aria-labelledby="skills-tab-creature-{{ creature.id }}-tab">
+                                          <div class="tab-pane fade" id="skills-creature-{{ encounter_group.id}}-{{ encounter.id }}-{{ creature.id }}" role="tabpanel" aria-labelledby="skills-tab-creature-{{ encounter_group.id}}-{{ encounter.id }}-{{ creature.id }}-tab">
                                               Skills and saves (maybe just skills)
                                           </div>
                                         </div>
