@@ -28,7 +28,26 @@
                   </div>
                   <div id="collapse-{{ encounter_group.id }}-{{ encounter.id }}" class="collapse show" aria-labelledby="heading-{{ encounter_group.id }}-{{ encounter.id}}" data-parent="#collapse-{{ encounter_group.id }}">
                       <div class="card-body">
-                          BEEF
+                          {% for creature in encounter.creatures %}
+                            <div class="card">
+                                <div class="card-header" id="heading-{{ encounter_group.id}}-{{ encounter.id }}-{{ creature.id}}">
+                                    <h4 class="mb-0">
+                                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse-{{encounter_group.id }}-{{ encounter.id }}-{{ creature.id }}" aria-expanded="true" aria-controls="collapse-{{ encounter_group.id}}-{{ encounter.id }}-{{ creature.id }}">
+                                            {{ creature.display_name }}: (todo) Creature template name, current hp/max hp, current initiative
+                                        </button>
+                                    </h4>
+                                </div>
+                                <div id="collapse-{{ encounter_group.id}}-{{ encounter.id }}-{{ creature.id }}" class="collapse show" aria-labelledby="heading-{{ encounter_group.id }}-{{ encounter.id }}-{{ creature.id }}" data-parent="#collapse-{{ encounter_group.id }}-{{ encounter.id }}">
+                                    <div class="card-body">
+                                        (A bunch of creature details. Maybe an official-looking stat block?)
+                                        <ul>
+                                            <li>{{ creature.template.name }}</li>
+                                            <li>{{ creature.template.race.type }}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                          {% endfor %}
                       </div>
                   </div>
               </div>
