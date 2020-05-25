@@ -3,36 +3,25 @@
 {% block title %}Talespinner: Encounter Groups{% endblock %}
 
 {% block content %}
-<div id="encounter-groups">
-    Encounter Groups
-    <select>
+<div class="container">
+    <div class="accordion" id="accordionExample">
         {% for encounter_group in encounter_groups %}
-        <option value="{{encounter_group.id}}">{{encounter_group.name}}</option>
+      <div class="card">
+        <div class="card-header" id="heading-{{ encounter_group.id }}">
+          <h2 class="mb-0">
+            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse-{{ encounter_group.id }}" aria-expanded="true" aria-controls="collapse-{{ encounter_group.id }}">
+              {{ encounter_group.name }} ({{ encounter_group.encounters|length }} encounter{{ encounter_group.encounters|pluralize }})
+            </button>
+          </h2>
+        </div>
+
+        <div id="collapse-{{ encounter_group.id }}" class="collapse show" aria-labelledby="heading-{{ encounter_group.id }}" data-parent="#accordionExample">
+          <div class="card-body">
+            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+          </div>
+        </div>
+      </div>
         {% endfor %}
-    </select>
-</div>
-<div>
-    {% for encounter_group in encounter_groups %}
-    <h2>{{ encounter_group.name }}</h2>
-        {% for encounter in encounter_group.encounters %}
-            <ul>
-            {% for creature in encounter.creatures %}
-                <li><h3>{{ creature.display_name }}</h3></li>
-                <ul>
-                    <li>Cnrrent HP: {{ creature.current_hp }}</li>
-                    <li>Alignment: {{ creature.alignment }}</li>
-                    <li>Current Initiative: {{ creature.current_initiative }}</li>
-                    <li>Conditions: {{ creature.conditions }}</li>
-                    <li>Template: {{creature.template.name }} ({{creature.template.race.type}} {{creature.template.race.subtype}})</li>
-                    <ul>
-                        {% for field in creature.template %}
-                        <li>{{ field }}</li>
-                        {% endfor %}
-                    </ul>
-                </ul>
-            {% endfor %}
-            </ul>
-        {% endfor %}
-    {% endfor %}
-</div>
+    </div>
+</div> <!-- end container -->
 {% endblock %}
