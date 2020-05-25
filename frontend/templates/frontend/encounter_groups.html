@@ -9,35 +9,35 @@
       <div class="card">
         <div class="card-header" id="heading-{{ encounter_group.id }}">
           <h2 class="mb-0">
-            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse-{{ encounter_group.id }}" aria-expanded="true" aria-controls="collapse-{{ encounter_group.id }}">
+            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse-{{ encounter_group.id }}" aria-expanded="false" aria-controls="collapse-{{ encounter_group.id }}">
               {{ encounter_group.name }} ({{ encounter_group.encounters|length }} encounter{{ encounter_group.encounters|pluralize }})
             </button>
           </h2>
         </div>
 
-        <div id="collapse-{{ encounter_group.id }}" class="collapse show" aria-labelledby="heading-{{ encounter_group.id }}" data-parent="#accordionExample">
+        <div id="collapse-{{ encounter_group.id }}" class="collapse" aria-labelledby="heading-{{ encounter_group.id }}" data-parent="#accordionExample">
           <div class="card-body">
             {% for encounter in encounter_group.encounters %}
               <div class="card">
                   <div class="card-header" id="heading-{{ encounter_group.id }}-{{ encounter.id }}">
                       <h3 class="mb-0">
-                          <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse-{{ encounter_group.id }}-{{ encounter.id }}" aria-expanded="true" aria-controls="collapse-{{ encounter_group.id }}-{{ encounter.id}}">
-                              {{ encounter.name }} ({{ encounter.creatures|length }} creature{{ encounter.creatures.pluralize }})
+                          <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse-{{ encounter_group.id }}-{{ encounter.id }}" aria-expanded="false" aria-controls="collapse-{{ encounter_group.id }}-{{ encounter.id}}">
+                              {{ encounter.name }} ({{ encounter.creatures|length }} creature{{ encounter.creatures|pluralize }})
                           </button>
                       </h3>
                   </div>
-                  <div id="collapse-{{ encounter_group.id }}-{{ encounter.id }}" class="collapse show" aria-labelledby="heading-{{ encounter_group.id }}-{{ encounter.id}}" data-parent="#collapse-{{ encounter_group.id }}">
+                  <div id="collapse-{{ encounter_group.id }}-{{ encounter.id }}" class="collapse" aria-labelledby="heading-{{ encounter_group.id }}-{{ encounter.id}}" data-parent="#collapse-{{ encounter_group.id }}">
                       <div class="card-body">
                           {% for creature in encounter.creatures %}
                             <div class="card">
                                 <div class="card-header" id="heading-{{ encounter_group.id}}-{{ encounter.id }}-{{ creature.id}}">
                                     <h4 class="mb-0">
-                                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse-{{encounter_group.id }}-{{ encounter.id }}-{{ creature.id }}" aria-expanded="true" aria-controls="collapse-{{ encounter_group.id}}-{{ encounter.id }}-{{ creature.id }}">
+                                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse-{{encounter_group.id }}-{{ encounter.id }}-{{ creature.id }}" aria-expanded="false" aria-controls="collapse-{{ encounter_group.id}}-{{ encounter.id }}-{{ creature.id }}">
                                             {{ creature.display_name }}: (todo) Creature template name, current hp/max hp, current initiative
                                         </button>
                                     </h4>
                                 </div>
-                                <div id="collapse-{{ encounter_group.id}}-{{ encounter.id }}-{{ creature.id }}" class="collapse show" aria-labelledby="heading-{{ encounter_group.id }}-{{ encounter.id }}-{{ creature.id }}" data-parent="#collapse-{{ encounter_group.id }}-{{ encounter.id }}">
+                                <div id="collapse-{{ encounter_group.id}}-{{ encounter.id }}-{{ creature.id }}" class="collapse" aria-labelledby="heading-{{ encounter_group.id }}-{{ encounter.id }}-{{ creature.id }}" data-parent="#collapse-{{ encounter_group.id }}-{{ encounter.id }}">
                                     <div class="card-body">
                                         (A bunch of creature details. Maybe an official-looking stat block?)
                                         <ul>
