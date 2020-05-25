@@ -1,0 +1,12 @@
+span.roll-label, img {
+    display: inline-block;
+}
+
+img.roll-image {
+    width: 15px;
+    cursor: pointer;
+}
+
+table.table {
+    text-align: center;
+}

@@ -1,4 +1,5 @@
 {% extends "frontend/base.html" %}
+{% load static %}
 
 {% block title %}Talespinner: Encounter Groups{% endblock %}
 
@@ -57,19 +58,20 @@
                                               <table class="table">
                                                   <thead>
                                                     <tr>
-                                                        <th>STR</th>
-                                                        <th>DEX</th>
-                                                        <th>CON</th>
-                                                        <th>INT</th>
-                                                        <th>WIS</th>
-                                                        <th>CHA</th>
+                                                        <th></th>
+                                                        <th><span class="roll-label">STR</span> <img class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></th>
+                                                        <th><span class="roll-label">DEX</span> <img class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></th>
+                                                        <th><span class="roll-label">CON</span> <img class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></th>
+                                                        <th><span class="roll-label">INT</span> <img class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></th>
+                                                        <th><span class="roll-label">WIS</span> <img class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></th>
+                                                        <th><span class="roll-label">CHA</span> <img class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></th>
                                                         <th>AC</th>
                                                         <th>HP</th>
-                                                        <th>Max HP</th>
                                                     </tr>
                                                   </thead>
                                                   <tbody>
                                                     <tr>
+                                                        <td></td>
                                                         <td>{{ creature.template.str }}</td>
                                                         <td>{{ creature.template.dex }}</td>
                                                         <td>{{ creature.template.con }}</td>
@@ -77,8 +79,18 @@
                                                         <td>{{ creature.template.wis }}</td>
                                                         <td>{{ creature.template.cha }}</td>
                                                         <td>{{ creature.template.ac }}</td>
-                                                        <td>{{ creature.current_hp }}</td>
-                                                        <td>{{ creature.template.max_hp }}</td>
+                                                        <td>{{ creature.current_hp }}/{{ creature.template.max_hp }}</td>
+                                                    </tr>
+                                                    <tr class="roll-result-row">
+                                                        <td>Roll Result:</td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
                                                     </tr>
                                                   </tbody>
 
