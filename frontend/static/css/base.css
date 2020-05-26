@@ -10,3 +10,7 @@ img.roll-image {
 table.table {
     text-align: center;
 }
+
+div.roll-result {
+    white-space: nowrap;
+}

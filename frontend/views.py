@@ -4,6 +4,7 @@ import requests
 
 from django.views.generic.base import TemplateView
 from django.shortcuts import render
+from django.conf import settings
 
 from talespinner import constants
 
@@ -43,5 +44,6 @@ class EncounterGroupsView(TemplateView):
         response = requests.get(url)
         data = response.json()
         context["encounter_groups"] = data
+        context["AUTH_TOKEN"] = settings.AUTH_TOKEN
 
         return render(request, self.template_name, context)
