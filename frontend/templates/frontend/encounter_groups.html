@@ -34,7 +34,7 @@
                                 <div class="card-header" id="heading-{{ encounter_group.id}}-{{ encounter.id }}-{{ creature.id}}">
                                     <h4 class="mb-0">
                                         <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse-{{encounter_group.id }}-{{ encounter.id }}-{{ creature.id }}" aria-expanded="false" aria-controls="collapse-{{ encounter_group.id}}-{{ encounter.id }}-{{ creature.id }}">
-                                            {{ creature.display_name }}: (todo) Creature template name, current hp/max hp, current initiative
+                                            {{ creature.display_name }}: {{ creature.template.name }} {{ creature.current_hp }}/{{ creature.template.max_hp }} HP. Current initiative: {{ creature.current_initiative }}
                                         </button>
                                     </h4>
                                 </div>
