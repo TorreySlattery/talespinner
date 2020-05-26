@@ -291,7 +291,7 @@ class Creature(models.Model):
             else:
                 mod = getattr(self.template, field)
         except AttributeError:
-            return None
+            raise
         roll_1 = randint(1, 20)
         roll_1_total = roll_1 + mod
         roll_2 = randint(1, 20)

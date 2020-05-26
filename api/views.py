@@ -37,7 +37,22 @@ class RollView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def post(self, request):
+        creature_id = request.data.get('creature_id')
+        field_name = request.data.get('field_name')
+        if not creature_id or not field_name:
+            return Response(status=406, data={"error": "missing creature_id and/or field_name"})
+
+        try:
+            creature = models.Creature.objects.get(pk=creature_id)
+        except models.Creature.DoesNotExist:
+            return Response(status=404, data={"error": f"creature with id: {creature_id} not found"})
+
+        try:
+            roll = creature.roll(field_name)
+        except AttributeError:
+            return Response(status=406, data={"error": f"field_name: {field_name} is not valid"})
+
         content = {
-            "Hey": "there Kadala {}".format(request.data)
+            "result": roll
         }
         return Response(content)
