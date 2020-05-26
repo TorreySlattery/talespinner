@@ -53,17 +53,16 @@
                                         </ul>
                                         <div class="tab-content" id="creature-tablist-{{ encounter_group.id}}-{{ encounter.id }}-{{ creature.id }}Content">
                                           <div class="tab-pane fade show active" id="stats-creature-{{ encounter_group.id}}-{{ encounter.id }}-{{ creature.id }}" role="tabpanel" aria-labelledby="stats-tab-creature-{{ encounter_group.id}}-{{ encounter.id }}-{{ creature.id }}">
-                                              Stats, AC, hp, senses, saves
                                               <table class="table">
                                                   <thead>
                                                     <tr>
                                                         <th></th>
-                                                        <th><span class="roll-label">STR</span> <img class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></th>
-                                                        <th><span class="roll-label">DEX</span> <img class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></th>
-                                                        <th><span class="roll-label">CON</span> <img class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></th>
-                                                        <th><span class="roll-label">INT</span> <img class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></th>
-                                                        <th><span class="roll-label">WIS</span> <img class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></th>
-                                                        <th><span class="roll-label">CHA</span> <img class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></th>
+                                                        <th><span class="roll-label">STR</span> <img data-target="str" class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></th>
+                                                        <th><span class="roll-label">DEX</span> <img data-target="dex" class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></th>
+                                                        <th><span class="roll-label">CON</span> <img data-target="con" class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></th>
+                                                        <th><span class="roll-label">INT</span> <img data-target="int" class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></th>
+                                                        <th><span class="roll-label">WIS</span> <img data-target="wis" class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></th>
+                                                        <th><span class="roll-label">CHA</span> <img data-target="cha" class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></th>
                                                         <th>AC</th>
                                                         <th>HP</th>
                                                     </tr>
@@ -82,12 +81,12 @@
                                                     </tr>
                                                     <tr class="roll-result-row">
                                                         <td>Roll Result:</td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td></td>
+                                                        <td data-stat="str"></td>
+                                                        <td data-stat="dex"></td>
+                                                        <td data-stat="con"></td>
+                                                        <td data-stat="int"></td>
+                                                        <td data-stat="wis"></td>
+                                                        <td data-stat="cha"></td>
                                                         <td></td>
                                                         <td></td>
                                                     </tr>
