@@ -280,6 +280,29 @@ class Creature(models.Model):
     def __str__(self):
         return f"{self.display_name} ({self.template.name})"
 
+    def roll(self, field):
+        """Takes a field name and rolls two d20s, returning string representations for the frontend to consume"""
+        field = field.lower()
+        try:
+            stat_fields = ["str", "dex", "con", "int", "wis", "cha"]
+            if field in stat_fields:
+                stat = getattr(self.template, field)
+                mod = (stat - 10) // 2
+            else:
+                mod = getattr(self.template, field)
+        except AttributeError:
+            return None
+        roll_1 = randint(1, 20)
+        roll_1_total = roll_1 + mod
+        roll_2 = randint(1, 20)
+        roll_2_total = roll_2 + mod
+
+        mod_symbol = "+" if mod >= 0 else ""
+        return (
+            f"{roll_1}{mod_symbol}{mod}={roll_1_total}",
+            f"{roll_2}{mod_symbol}{mod}={roll_2_total}",
+        )
+
 
 class CreatureHistory(models.Model):
     """A simple log for keeping track of what rolls a creature makes"""

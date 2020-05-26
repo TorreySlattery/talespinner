@@ -44,7 +44,7 @@ class CreatureTemplateSerializer(serializers.ModelSerializer):
     senses = SenseSerializer(read_only=True, many=True)
     traits = TraitSerializer(read_only=True, many=True)
     race = RaceSerializer(read_only=True)
-    actions = ActionSerializer(read_only=True,  many=True)
+    actions = ActionSerializer(read_only=True, many=True)
     attacks = AttackSerializer(read_only=True, many=True)
 
     class Meta:

@@ -78,10 +78,10 @@ class AttackAdmin(admin.ModelAdmin):
         "description",
     )
 
+
 @admin.register(models.Race)
 class RaceAdmin(admin.ModelAdmin):
     list_display = (
         "type",
         "subtype",
     )
-

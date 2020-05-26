@@ -11,7 +11,7 @@ class EncounterViewSet(viewsets.ReadOnlyModelViewSet):
         "creatures__template__senses",
         "creatures__template__languages",
         "creatures__template__traits",
-        "creatures__template__race"
+        "creatures__template__race",
     )
     serializer_class = serializers.EncounterSerializer
 
@@ -24,7 +24,7 @@ class EncounterGroupViewSet(viewsets.ReadOnlyModelViewSet):
         "encounters__creatures__template__senses",
         "encounters__creatures__template__languages",
         "encounters__creatures__template__traits",
-        "encounters__creatures__template__race"
+        "encounters__creatures__template__race",
     )
 
     serializer_class = serializers.EncounterGroupSerializer
