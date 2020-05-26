@@ -1,4 +1,7 @@
 from rest_framework import viewsets
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 
 from creatures import models
 from api import serializers
@@ -28,3 +31,13 @@ class EncounterGroupViewSet(viewsets.ReadOnlyModelViewSet):
     )
 
     serializer_class = serializers.EncounterGroupSerializer
+
+
+class RollView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        content = {
+            "Hey": "there Kadala {}".format(request.data)
+        }
+        return Response(content)

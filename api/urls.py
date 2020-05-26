@@ -6,6 +6,9 @@ import api.views
 
 router = DefaultRouter()
 router.register("encounters", api.views.EncounterViewSet)
-router.register("encounter-groups", api.views.EncounterGroupViewSet)
+router.register("encounter-groups", api.views.EncounterGroupViewSet),
 
-urlpatterns = [path("", include(router.urls))]
+urlpatterns = [
+    path("", include(router.urls)),
+    path("roll/", api.views.RollView.as_view(), name="roll"),
+]
