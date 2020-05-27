@@ -98,7 +98,126 @@
                                               Actions (maybe make a new tab for attacks)
                                           </div>
                                           <div class="tab-pane fade" id="skills-creature-{{ encounter_group.id}}-{{ encounter.id }}-{{ creature.id }}" role="tabpanel" aria-labelledby="skills-tab-creature-{{ encounter_group.id}}-{{ encounter.id }}-{{ creature.id }}-tab">
-                                              Skills and saves (maybe just skills)
+                                              <table class="table" data-creature-id="{{ creature.id }}">
+                                                  <thead>
+                                                    <tr>
+                                                        <th>Skill</th>
+                                                        <th>Mod</th>
+                                                        <th></th>
+                                                        <th>Roll Result</th>
+                                                    </tr>
+                                                  </thead>
+                                                  <tbody>
+                                                    <tr>
+                                                        <td>Acrobatics</td>
+                                                        <td>{{ creature.template.acrobatics }}</td>
+                                                        <td><img class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></td>
+                                                        <td data-roll-field="acrobatics"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Animal Handling</td>
+                                                        <td>{{ creature.template.animal_handling }}</td>
+                                                        <td><img class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></td>
+                                                        <td data-roll-field="animal_handling"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Arcana</td>
+                                                        <td>{{ creature.template.arcana }}</td>
+                                                        <td><img class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></td>
+                                                        <td data-roll-field="arcana"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Athletics</td>
+                                                        <td>{{ creature.template.athletics }}</td>
+                                                        <td><img class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></td>
+                                                        <td data-roll-field="athletics"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Deception</td>
+                                                        <td>{{ creature.template.deception }}</td>
+                                                        <td><img class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></td>
+                                                        <td data-roll-field="deception"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>History</td>
+                                                        <td>{{ creature.template.history }}</td>
+                                                        <td><img class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></td>
+                                                        <td data-roll-field="history"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Insight</td>
+                                                        <td>{{ creature.template.insight }}</td>
+                                                        <td><img class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></td>
+                                                        <td data-roll-field="insight"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Intimidation</td>
+                                                        <td>{{ creature.template.intimidation }}</td>
+                                                        <td><img class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></td>
+                                                        <td data-roll-field="intimidation"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Investigation</td>
+                                                        <td>{{ creature.template.investigation }}</td>
+                                                        <td><img class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></td>
+                                                        <td data-roll-field="investigation"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Medicine</td>
+                                                        <td>{{ creature.template.medicine }}</td>
+                                                        <td><img class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></td>
+                                                        <td data-roll-field="medicine"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Nature</td>
+                                                        <td>{{ creature.template.nature }}</td>
+                                                        <td><img class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></td>
+                                                        <td data-roll-field="nature"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Perception</td>
+                                                        <td>{{ creature.template.perception }}</td>
+                                                        <td><img class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></td>
+                                                        <td data-roll-field="perception"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Performance</td>
+                                                        <td>{{ creature.template.performance }}</td>
+                                                        <td><img class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></td>
+                                                        <td data-roll-field="performance"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Persuasion</td>
+                                                        <td>{{ creature.template.persuasion }}</td>
+                                                        <td><img class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></td>
+                                                        <td data-roll-field="persuasion"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Religion</td>
+                                                        <td>{{ creature.template.religion }}</td>
+                                                        <td><img class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></td>
+                                                        <td data-roll-field="religion"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Sleight of Hand</td>
+                                                        <td>{{ creature.template.sleight_of_hand }}</td>
+                                                        <td><img class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></td>
+                                                        <td data-roll-field="slight_of_hand"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Stealth</td>
+                                                        <td>{{ creature.template.stealth }}</td>
+                                                        <td><img class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></td>
+                                                        <td data-roll-field="stealth"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Survival</td>
+                                                        <td>{{ creature.template.survival }}</td>
+                                                        <td><img class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></td>
+                                                        <td data-roll-field="survival"></td>
+                                                    </tr>
+                                                  </tbody>
+                                              </table>
                                           </div>
                                         </div>
                                     </div>
