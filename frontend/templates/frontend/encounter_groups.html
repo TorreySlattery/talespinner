@@ -56,37 +56,67 @@
                                               <table class="table" data-creature-id="{{ creature.id }}">
                                                   <thead>
                                                     <tr>
-                                                        <th></th>
-                                                        <th><span class="roll-label">STR</span> <img data-target="str" class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></th>
-                                                        <th><span class="roll-label">DEX</span> <img data-target="dex" class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></th>
-                                                        <th><span class="roll-label">CON</span> <img data-target="con" class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></th>
-                                                        <th><span class="roll-label">INT</span> <img data-target="int" class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></th>
-                                                        <th><span class="roll-label">WIS</span> <img data-target="wis" class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></th>
-                                                        <th><span class="roll-label">CHA</span> <img data-target="cha" class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></th>
-                                                        <th>AC</th>
-                                                        <th>HP</th>
+                                                        <th>Stat</th>
+                                                        <th>Value</th>
+                                                        <th>Roll?</th>
+                                                        <th>Roll Result</th>
+                                                        <th>Save Bonus</th>
                                                     </tr>
                                                   </thead>
                                                   <tbody>
                                                     <tr>
-                                                        <td></td>
+                                                        <td>STR</td>
                                                         <td>{{ creature.template.str }}</td>
-                                                        <td>{{ creature.template.dex }}</td>
-                                                        <td>{{ creature.template.con }}</td>
-                                                        <td>{{ creature.template.int }}</td>
-                                                        <td>{{ creature.template.wis }}</td>
-                                                        <td>{{ creature.template.cha }}</td>
-                                                        <td>{{ creature.template.ac }}</td>
-                                                        <td>{{ creature.current_hp }}/{{ creature.template.max_hp }}</td>
+                                                        <td><img class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></td>
+                                                        <td data-roll-field="str"></td>
+                                                        <td>{{ creature.template.str_save }}</td>
                                                     </tr>
-                                                    <tr class="roll-result-row">
-                                                        <td>Roll Result:</td>
-                                                        <td data-stat="str"></td>
-                                                        <td data-stat="dex"></td>
-                                                        <td data-stat="con"></td>
-                                                        <td data-stat="int"></td>
-                                                        <td data-stat="wis"></td>
-                                                        <td data-stat="cha"></td>
+                                                    <tr>
+                                                        <td>DEX</td>
+                                                        <td>{{ creature.template.dex }}</td>
+                                                        <td><img class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></td>
+                                                        <td data-roll-field="dex"></td>
+                                                        <td>{{ creature.template.dex_save }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>CON</td>
+                                                        <td>{{ creature.template.con }}</td>
+                                                        <td><img class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></td>
+                                                        <td data-roll-field="con"></td>
+                                                        <td>{{ creature.template.con_save }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>INT</td>
+                                                        <td>{{ creature.template.int }}</td>
+                                                        <td><img class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></td>
+                                                        <td data-roll-field="int"></td>
+                                                        <td>{{ creature.template.int_save }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>WIS</td>
+                                                        <td>{{ creature.template.wis }}</td>
+                                                        <td><img class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></td>
+                                                        <td data-roll-field="wis"></td>
+                                                        <td>{{ creature.template.wis_save }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>CHA</td>
+                                                        <td>{{ creature.template.cha }}</td>
+                                                        <td><img class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></td>
+                                                        <td data-roll-field="cha"></td>
+                                                        <td>{{ creature.template.cha_save }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>AC</td>
+                                                        <td>{{ creature.template.ac }}</td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>HP</td>
+                                                        <td>{{ creature.current_hp }} of {{ creature.template.avg_hp }}</td>
+                                                        <td></td>
                                                         <td></td>
                                                         <td></td>
                                                     </tr>
@@ -103,7 +133,7 @@
                                                     <tr>
                                                         <th>Skill</th>
                                                         <th>Mod</th>
-                                                        <th></th>
+                                                        <th>Roll?</th>
                                                         <th>Roll Result</th>
                                                     </tr>
                                                   </thead>
@@ -202,7 +232,7 @@
                                                         <td>Sleight of Hand</td>
                                                         <td>{{ creature.template.sleight_of_hand }}</td>
                                                         <td><img class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></td>
-                                                        <td data-roll-field="slight_of_hand"></td>
+                                                        <td data-roll-field="sleight_of_hand"></td>
                                                     </tr>
                                                     <tr>
                                                         <td>Stealth</td>
