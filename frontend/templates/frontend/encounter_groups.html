@@ -125,7 +125,24 @@
                                               </table>
                                           </div>
                                           <div class="tab-pane fade" id="actions-creature-{{ encounter_group.id}}-{{ encounter.id }}-{{ creature.id }}" role="tabpanel" aria-labelledby="actions-tab-creature-{{ encounter_group.id}}-{{ encounter.id }}-{{ creature.id }}">
-                                              Actions (maybe make a new tab for attacks)
+                                              {% for action in creature.template.actions %}
+                                              <div class="card">
+                                                  <div class="card-body">
+                                                      <h5 class="card-title">{{ action.name }}</h5>
+                                                      <p class="card-text">{{ action.description }}</p>
+                                                  </div>
+                                              </div>
+                                              {% endfor %}
+                                              {% for attack in creature.template.attacks %}
+                                              <div class="card">
+                                                  <div class="card-body">
+                                                      <h5 class="card-title">{{ attack.name }}</h5>
+                                                      <p class="card-text">{{ attack.description }}</p>
+                                                      <a href="#" class="btn btn-primary">Roll this Attack</a>
+                                                      <span class="attack-roll-output-field"></span>
+                                                  </div>
+                                              </div>
+                                              {% endfor %}
                                           </div>
                                           <div class="tab-pane fade" id="skills-creature-{{ encounter_group.id}}-{{ encounter.id }}-{{ creature.id }}" role="tabpanel" aria-labelledby="skills-tab-creature-{{ encounter_group.id}}-{{ encounter.id }}-{{ creature.id }}-tab">
                                               <table class="table" data-creature-id="{{ creature.id }}">
