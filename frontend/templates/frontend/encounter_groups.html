@@ -57,6 +57,7 @@
                                               <div class="card">
                                                   <div class="card-body">
                                                       <h5 class="card-title">{{ action.name }}</h5>
+                                                      <h6 class="card-subtitle text-muted">Action</h6>
                                                       <p class="card-text">{{ action.description }}</p>
                                                   </div>
                                               </div>
@@ -65,9 +66,19 @@
                                               <div class="card">
                                                   <div class="card-body">
                                                       <h5 class="card-title">{{ attack.name }}</h5>
+                                                      <h6 class="card-subtitle text-muted">Attack</h6>
                                                       <p class="card-text">{{ attack.description }}</p>
                                                       <a href="#" class="btn btn-primary">Roll this Attack</a>
                                                       <span class="attack-roll-output-field"></span>
+                                                  </div>
+                                              </div>
+                                              {% endfor %}
+                                              {% for trait in creature.template.traits %}
+                                              <div class="card">
+                                                  <div class="card-body">
+                                                      <h5 class="card-title">{{ trait.name }}</h5>
+                                                      <h6 class="card-subtitle text-muted">Trait</h6>
+                                                      <p class="card-text">{{ trait.description }}</p>
                                                   </div>
                                               </div>
                                               {% endfor %}
