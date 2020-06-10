@@ -27,7 +27,9 @@
                           </button>
                       </h3>
                   </div>
-                  <div id="collapse-{{ encounter_group.id }}-{{ encounter.id }}" class="collapse" aria-labelledby="heading-{{ encounter_group.id }}-{{ encounter.id}}" data-parent="#collapse-{{ encounter_group.id }}">
+                  <div class="row">
+                      <div class="col-6">
+                        <div id="collapse-{{ encounter_group.id }}-{{ encounter.id }}" class="collapse" aria-labelledby="heading-{{ encounter_group.id }}-{{ encounter.id}}" data-parent="#collapse-{{ encounter_group.id }}">
                       <div class="card-body">
                           {% for creature in encounter.creatures %}
                             <div class="card">
@@ -281,7 +283,66 @@
                                     </div>
                                 </div>
                             </div>
-                          {% endfor %}
+                          {% endfor %}  <!-- endfor creature in encounter.creatures -->
+                      </div>
+                  </div>
+                      </div>
+                      <div class="col-6">
+                          <table class="table"
+                                 data-encounter-group-id="{{ encounter_group.id }}"
+                                 data-encounter-id="{{ encounter.id }}">
+                              <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Initiative</th>
+                                    <th>STR Save</th>
+                                    <th>DEX Save</th>
+                                    <th>CON Save</th>
+                                    <th>INT Save</th>
+                                    <th>WIS Save</th>
+                                    <th>CHA Save</th>
+                                </tr>
+                                <tr>
+                                    <th></th>
+                                    <th>
+                                        <img class="group-roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/>
+                                    </th>
+                                    <th>
+                                        <img class="group-roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/>
+                                    </th>
+                                    <th>
+                                        <img class="group-roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/>
+                                    </th>
+                                    <th>
+                                        <img class="group-roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/>
+                                    </th>
+                                    <th>
+                                        <img class="group-roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/>
+                                    </th>
+                                    <th>
+                                        <img class="group-roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/>
+                                    </th>
+                                    <th>
+                                        <img class="group-roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/>
+                                    </th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                              {% for creature in encounter.creatures %}
+                                <tr class="creature-group-roll-row">
+                                    <td data-creature-id="{{ creature.id }}">{{ creature.display_name }}</td>
+                                    <td data-roll-field="initiative"></td>
+                                    <td data-roll-field="str_save"></td>
+                                    <td data-roll-field="dex_save"></td>
+                                    <td data-roll-field="con_save"></td>
+                                    <td data-roll-field="int_save"></td>
+                                    <td data-roll-field="wis_save"></td>
+                                    <td data-roll-field="cha_save"></td>
+                                </tr>
+                              {% endfor %}  <!-- endfor creature in encounter.creatures -->
+
+                              </tbody>
+                          </table>
                       </div>
                   </div>
               </div>

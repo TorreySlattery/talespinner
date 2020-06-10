@@ -7,6 +7,11 @@ img.roll-image {
     cursor: pointer;
 }
 
+img.group-roll-image {
+    width: 15px;
+    cursor: pointer;
+}
+
 table.table {
     text-align: center;
 }
