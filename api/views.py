@@ -37,26 +37,33 @@ class RollView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def post(self, request):
-        creature_id = request.data.get("creature_id")
         field_name = request.data.get("field_name")
-        if not creature_id or not field_name:
-            return Response(
-                status=406, data={"error": "missing creature_id and/or field_name"}
-            )
+        roll_type = request.data.get("roll_type")
+        roll_scope = request.data.get("roll_scope")  # group roll or individual creature roll?
 
-        try:
-            creature = models.Creature.objects.get(pk=creature_id)
-        except models.Creature.DoesNotExist:
-            return Response(
-                status=404, data={"error": f"creature with id: {creature_id} not found"}
-            )
+        if roll_scope == "individual" or roll_scope is None:
+            creature_id = request.data.get("creature_id")
 
-        try:
-            roll = creature.roll(field_name)
-        except AttributeError:
-            return Response(
-                status=406, data={"error": f"field_name: {field_name} is not valid"}
-            )
+            if not creature_id or not field_name:
+                return Response(
+                    status=406, data={"error": "missing creature_id and/or field_name"}
+                )
+
+            try:
+                creature = models.Creature.objects.get(pk=creature_id)
+            except models.Creature.DoesNotExist:
+                return Response(
+                    status=404, data={"error": f"creature with id: {creature_id} not found"}
+                )
+
+            try:
+                roll = creature.roll(field_name, roll_type=roll_type)
+            except AttributeError:
+                return Response(
+                    status=406, data={"error": f"field_name: {field_name} is not valid"}
+                )
+        else:  # Else this is a group roll type, so there should be an encounter id instead of a creature id
+            roll = "blarg"
 
         content = {"result": roll}
         return Response(content)

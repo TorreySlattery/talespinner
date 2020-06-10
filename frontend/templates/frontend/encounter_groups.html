@@ -171,8 +171,10 @@
                                                     <tr>
                                                         <td>Acrobatics</td>
                                                         <td>{{ creature.template.acrobatics }}</td>
-                                                        <td><img class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/></td>
-                                                        <td data-roll-field="acrobatics"></td>
+                                                        <td data-roll-field="acrobatics" data-roll-type="skill">
+                                                            <img class="roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/>
+                                                        </td>
+                                                        <td data-roll-output-field="acrobatics"></td>
                                                     </tr>
                                                     <tr>
                                                         <td>Animal Handling</td>
@@ -304,25 +306,25 @@
                                 </tr>
                                 <tr>
                                     <th></th>
-                                    <th>
+                                    <th data-roll-field="dex" data-roll-type="stat"> <!-- todo: determine if I'm going to regret doing this for initiative-->
                                         <img class="group-roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/>
                                     </th>
-                                    <th>
+                                    <th data-roll-field="str_save" data-roll-type="save">
                                         <img class="group-roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/>
                                     </th>
-                                    <th>
+                                    <th data-roll-field="dex_save" data-roll-type="save">
                                         <img class="group-roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/>
                                     </th>
-                                    <th>
+                                    <th data-roll-field="con_save" data-roll-type="save">
                                         <img class="group-roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/>
                                     </th>
-                                    <th>
+                                    <th data-roll-field="int_save" data-roll-type="save">
                                         <img class="group-roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/>
                                     </th>
-                                    <th>
+                                    <th data-roll-field="wis_save" data-roll-type="save">
                                         <img class="group-roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/>
                                     </th>
-                                    <th>
+                                    <th data-roll-field="cha_save" data-roll-type="save">
                                         <img class="group-roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/>
                                     </th>
                                 </tr>

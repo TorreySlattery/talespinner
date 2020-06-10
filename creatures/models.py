@@ -280,16 +280,22 @@ class Creature(models.Model):
     def __str__(self):
         return f"{self.display_name} ({self.template.name})"
 
-    def roll(self, field):
-        """Takes a field name and rolls two d20s, returning string representations for the frontend to consume"""
-        field = field.lower()
+    def roll(self, field_name, roll_type=None):
+        """
+        Takes a field name and a type of roll (stat, skill, save; initiative is consider a stat roll), rolls 2 d20s
+        and returns both results as a tuple for consumption.
+        """
+        field_name = field_name.lower()
         try:
-            stat_fields = ["str", "dex", "con", "int", "wis", "cha"]
-            if field in stat_fields:
-                stat = getattr(self.template, field)
+            if roll_type == "stat":
+                stat = getattr(self.template, field_name)
                 mod = (stat - 10) // 2
+            elif roll_type == "save":
+                mod = getattr(self.template, field_name)
+            elif roll_type == "skill":
+                mod = getattr(self.template, field_name)
             else:
-                mod = getattr(self.template, field)
+                mod = 0
         except AttributeError:
             raise
         roll_1 = randint(1, 20)
