@@ -288,7 +288,10 @@ class Creature(models.Model):
         field_name = field_name.lower()
         try:
             if roll_type == "stat":
-                stat = getattr(self.template, field_name)
+                field_to_use = field_name
+                if field_name == "initiative":
+                    field_to_use = "dex"
+                stat = getattr(self.template, field_to_use)
                 mod = (stat - 10) // 2
             elif roll_type == "save":
                 mod = getattr(self.template, field_name)

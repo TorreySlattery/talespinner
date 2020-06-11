@@ -352,7 +352,7 @@
                                 </tr>
                                 <tr>
                                     <th></th>
-                                    <th data-roll-field="dex" data-roll-type="stat"> <!-- todo: determine if I'm going to regret doing this for initiative-->
+                                    <th data-roll-field="initiative" data-roll-type="stat">
                                         <img class="group-roll-image" src="{% static 'img/dice_black_on_white.svg' %}"/>
                                     </th>
                                     <th data-roll-field="str_save" data-roll-type="save">
@@ -377,8 +377,8 @@
                               </thead>
                               <tbody>
                               {% for creature in encounter.creatures %}
-                                <tr class="creature-group-roll-row">
-                                    <td data-creature-id="{{ creature.id }}">{{ creature.display_name }}</td>
+                                <tr class="creature-group-roll-row" data-creature-id="{{ creature.id }}">
+                                    <td>{{ creature.display_name }}</td>
                                     <td data-roll-field="initiative"></td>
                                     <td data-roll-field="str_save"></td>
                                     <td data-roll-field="dex_save"></td>

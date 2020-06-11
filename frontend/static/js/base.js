@@ -42,7 +42,20 @@ $(document).ready(function(){
                 "roll_scope": "group"
             },
         }).done(function(data){
-            console.log(data);
+            results = data["results"]
+            for (var creature_id in results){
+                if (results.hasOwnProperty(creature_id)) {
+                    var $tr = $parentTable.find(`tr[data-creature-id='${creature_id}']`);
+                    for (var roll_field in results[creature_id]){
+                        if(results[creature_id].hasOwnProperty(roll_field)){
+                            var $td = $tr.find(`td[data-roll-field='${roll_field}']`);
+                            $td.html(
+                                results[creature_id][roll_field][0] + "<br />" + results[creature_id][roll_field][1 ]
+                            )
+                        }
+                    }
+                }
+            }
         }).fail(function(err){
             console.log(err);
         });
