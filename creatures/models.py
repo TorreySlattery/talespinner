@@ -280,37 +280,55 @@ class Creature(models.Model):
     def __str__(self):
         return f"{self.display_name} ({self.template.name})"
 
-    def roll(self, field_name, roll_type=None):
+    def roll(self, field_name, roll_type):
         """
-        Takes a field name and a type of roll (stat, skill, save; initiative is consider a stat roll), rolls 2 d20s
+        Takes a field name and a type of roll (stat, skill, save, attack; initiative is consider a stat roll), rolls 2
+        d20s
         and returns both results as a tuple for consumption.
+
+        @todo: This could probably use more refactor work
         """
-        field_name = field_name.lower()
-        try:
+        template = self.template
+
+        def _get_base_roll():
+            _roll = {"base": randint(1, 20)}
             if roll_type == "stat":
                 field_to_use = field_name
                 if field_name == "initiative":
                     field_to_use = "dex"
-                stat = getattr(self.template, field_to_use)
+                stat = getattr(template, field_to_use)
                 mod = (stat - 10) // 2
             elif roll_type == "save":
-                mod = getattr(self.template, field_name)
+                mod = getattr(template, field_name)
             elif roll_type == "skill":
-                mod = getattr(self.template, field_name)
+                mod = getattr(template, field_name)
+            elif roll_type == "attack":
+                mod = template.attacks.get(name=field_name).to_hit_mod
             else:
                 mod = 0
-        except AttributeError:
-            raise
-        roll_1 = randint(1, 20)
-        roll_1_total = roll_1 + mod
-        roll_2 = randint(1, 20)
-        roll_2_total = roll_2 + mod
+            _roll["mod"] = mod
+            _roll["mod_symbol"] = "+" if mod >= 0 else ""
+            _roll["total"] = _roll["base"] + mod
+            _roll["field_name"] = field_name
+            return _roll
 
-        mod_symbol = "+" if mod >= 0 else ""
-        return (
-            f"{roll_1}{mod_symbol}{mod}={roll_1_total}",
-            f"{roll_2}{mod_symbol}{mod}={roll_2_total}",
-        )
+        def _get_attack_damage_roll(attack):
+            base = 0
+            for _ in range(attack.num_dice):
+                die_roll = randint(1, attack.die_step)
+                base += die_roll
+            total = base + attack.dmg_mod
+            mod_symbol = "+" if attack.dmg_mod >= 0 else ""
+            return {"base": base, "mod": attack.dmg_mod, "mod_symbol": mod_symbol, "total": total }
+
+        def _get_roll():
+            roll = _get_base_roll()
+            if roll_type == "attack":
+                attack = template.attacks.get(name=field_name)
+                roll["damage"] = _get_attack_damage_roll(attack)
+            return roll
+
+        return [_get_roll(), _get_roll()]
 
 
 class CreatureHistory(models.Model):
