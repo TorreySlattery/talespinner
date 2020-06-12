@@ -16,13 +16,11 @@ $(document).ready(function(){
             },
         }).done(function(data){
             var first_roll = data["results"][creature_id][0];
-            var emphasize_1 = first_roll["base"] == 20 ? "critical": ""
             var second_roll = data["results"][creature_id][1];
-            var emphasize_2 = second_roll["base"] == 20 ? "critical": ""
             $td.siblings("td[data-roll-output-field]").html(
             `
-                <div class="roll-result ${emphasize_1}">${first_roll["total"]}</div>
-                <div class="roll-result ${emphasize_2}">${second_roll["total"]}</div>
+                <div class="roll-result">${first_roll["total"]}</div>
+                <div class="roll-result">${second_roll["total"]}</div>
             `
             );
         }).fail(function(err){
@@ -54,13 +52,11 @@ $(document).ready(function(){
                 if (results.hasOwnProperty(creature_id)) {
                     var $tr = $parentTable.find(`tr[data-creature-id='${creature_id}']`);
                     var first_roll = data["results"][creature_id][0];
-                    var emphasize_1 = first_roll["base"] == 20 ? "critical": ""
                     var second_roll = data["results"][creature_id][1];
-                    var emphasize_2 = second_roll["base"] == 20 ? "critical": ""
                     var $td = $tr.find(`td[data-roll-field='${field_name}']`);
                     $td.html(`
-                        <div class="roll-result ${emphasize_1}">${first_roll["total"]}</div>
-                        <div class="roll-result ${emphasize_2}">${second_roll["total"]}</div>
+                        <div class="roll-result">${first_roll["total"]}</div>
+                        <div class="roll-result">${second_roll["total"]}</div>
                     `)
                 }
             }
@@ -69,7 +65,8 @@ $(document).ready(function(){
         });
     });
 
-    $("a[data-roll-type='attack']").on('click', function(){
+    $("a[data-roll-type='attack']").on('click', function(e){
+        e.preventDefault();
         var creature_id = $(this).closest("div[data-creature-id]").attr("data-creature-id")
         var field_name = $(this).attr('data-roll-field');
         var roll_type = $(this).attr('data-roll-type');
@@ -87,11 +84,14 @@ $(document).ready(function(){
             },
         }).done(function(data){
             var rolls = data["results"][creature_id];
-            console.log(rolls);
-            $outputTable.find("td[data-attack-roll-1]").html(rolls[0]["total"])
-            $outputTable.find("td[data-attack-dmg-1]").html(rolls[0]["damage"]["total"])
-            $outputTable.find("td[data-attack-roll-2]").html(rolls[1]["total"])
-            $outputTable.find("td[data-attack-dmg-2]").html(rolls[1]["damage"]["total"])
+            var tdExtraClass1 = rolls[0]["base"] == 20 ? "critical-success" : "";
+            tdExtraClass1 = rolls[0]["base"] == 1 ? "critical-failure" : tdExtraClass1;
+            var tdExtraClass2 = rolls[1]["base"] == 20 ? "critical-success" : "";
+            tdExtraClass2 = rolls[1]["base"] == 1 ? "critical-failure" : tdExtraClass2;
+            $outputTable.find("td[data-attack-roll-1]").html(rolls[0]["total"]).removeClass("critical-success critical-failure").addClass(tdExtraClass1);
+            $outputTable.find("td[data-attack-dmg-1]").html(rolls[0]["damage"]["total"]);
+            $outputTable.find("td[data-attack-roll-2]").html(rolls[1]["total"]).removeClass("critical-success critical-failure").addClass(tdExtraClass2);
+            $outputTable.find("td[data-attack-dmg-2]").html(rolls[1]["damage"]["total"]);
         }).fail(function(err){
             console.log(err);
         });

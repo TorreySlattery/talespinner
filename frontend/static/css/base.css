@@ -20,10 +20,15 @@ div.roll-result {
     white-space: nowrap;
 }
 
-div.roll-result.critical {
+.critical-success {
+    border: 1px solid blue;
+}
+
+.critical-failure {
     border: 1px solid red;
 }
 
 table.attack-roll-output-table, a.btn-primary {
     display: inline-block;
+    vertical-align: top;
 }
