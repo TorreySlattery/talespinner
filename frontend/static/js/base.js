@@ -68,4 +68,32 @@ $(document).ready(function(){
             console.log(err);
         });
     });
+
+    $("a[data-roll-type='attack']").on('click', function(){
+        var creature_id = $(this).closest("div[data-creature-id]").attr("data-creature-id")
+        var field_name = $(this).attr('data-roll-field');
+        var roll_type = $(this).attr('data-roll-type');
+        var $outputTable = $(this).parent().find("table.attack-roll-output-table");
+
+        $.ajax({
+            type: "POST",
+            url: "http://localhost:8000/api/roll/",
+            headers: { "Authorization": "Token " + AUTH_TOKEN },
+            data: {
+                "creature_id": creature_id,
+                "field_name": field_name,
+                "roll_type": roll_type,
+                "roll_scope": "individual"
+            },
+        }).done(function(data){
+            var rolls = data["results"][creature_id];
+            console.log(rolls);
+            $outputTable.find("td[data-attack-roll-1]").html(rolls[0]["total"])
+            $outputTable.find("td[data-attack-dmg-1]").html(rolls[0]["damage"]["total"])
+            $outputTable.find("td[data-attack-roll-2]").html(rolls[1]["total"])
+            $outputTable.find("td[data-attack-dmg-2]").html(rolls[1]["damage"]["total"])
+        }).fail(function(err){
+            console.log(err);
+        });
+    });
 })

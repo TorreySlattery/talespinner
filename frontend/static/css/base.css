@@ -23,3 +23,7 @@ div.roll-result {
 div.roll-result.critical {
     border: 1px solid red;
 }
+
+table.attack-roll-output-table, a.btn-primary {
+    display: inline-block;
+}

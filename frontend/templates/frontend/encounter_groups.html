@@ -32,7 +32,7 @@
                         <div id="collapse-{{ encounter_group.id }}-{{ encounter.id }}" class="collapse" aria-labelledby="heading-{{ encounter_group.id }}-{{ encounter.id}}" data-parent="#collapse-{{ encounter_group.id }}">
                       <div class="card-body">
                           {% for creature in encounter.creatures %}
-                            <div class="card">
+                            <div class="card" data-creature-id="{{ creature.id }}">
                                 <div class="card-header" id="heading-{{ encounter_group.id}}-{{ encounter.id }}-{{ creature.id}}">
                                     <h4 class="mb-0">
                                         <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse-{{encounter_group.id }}-{{ encounter.id }}-{{ creature.id }}" aria-expanded="false" aria-controls="collapse-{{ encounter_group.id}}-{{ encounter.id }}-{{ creature.id }}">
@@ -70,8 +70,27 @@
                                                       <h5 class="card-title">{{ attack.name }}</h5>
                                                       <h6 class="card-subtitle text-muted">Attack</h6>
                                                       <p class="card-text">{{ attack.description }}</p>
-                                                      <a href="#" class="btn btn-primary">Roll this Attack</a>
-                                                      <span class="attack-roll-output-field"></span>
+                                                      <a href="#" class="btn btn-primary" data-roll-type="attack" data-roll-field="{{ attack.name }}">
+                                                          Roll this Attack
+                                                      </a>
+                                                      <table class="attack-roll-output-table">
+                                                          <thead>
+                                                            <tr>
+                                                                <th>Hit</th>
+                                                                <th>Dmg</th>
+                                                            </tr>
+                                                          </thead>
+                                                          <tbody>
+                                                            <tr>
+                                                                <td data-attack-roll-1></td>
+                                                                <td data-attack-dmg-1></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td data-attack-roll-2></td>
+                                                                <td data-attack-dmg-2></td>
+                                                            </tr>
+                                                          </tbody>
+                                                      </table>
                                                   </div>
                                               </div>
                                               {% endfor %}
