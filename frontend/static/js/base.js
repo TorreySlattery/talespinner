@@ -53,14 +53,15 @@ $(document).ready(function(){
             for (var creature_id in results){
                 if (results.hasOwnProperty(creature_id)) {
                     var $tr = $parentTable.find(`tr[data-creature-id='${creature_id}']`);
-                    for (var roll_field in results[creature_id]){
-                        if(results[creature_id].hasOwnProperty(roll_field)){
-                            var $td = $tr.find(`td[data-roll-field='${roll_field}']`);
-                            $td.html(
-                                results[creature_id][roll_field][0] + "<br />" + results[creature_id][roll_field][1 ]
-                            )
-                        }
-                    }
+                    var first_roll = data["results"][creature_id][0];
+                    var emphasize_1 = first_roll["base"] == 20 ? "critical": ""
+                    var second_roll = data["results"][creature_id][1];
+                    var emphasize_2 = second_roll["base"] == 20 ? "critical": ""
+                    var $td = $tr.find(`td[data-roll-field='${field_name}']`);
+                    $td.html(`
+                        <div class="roll-result ${emphasize_1}">${first_roll["total"]}</div>
+                        <div class="roll-result ${emphasize_2}">${second_roll["total"]}</div>
+                    `)
                 }
             }
         }).fail(function(err){
