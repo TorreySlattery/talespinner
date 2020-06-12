@@ -70,7 +70,7 @@ $(document).ready(function(){
         var creature_id = $(this).closest("div[data-creature-id]").attr("data-creature-id")
         var field_name = $(this).attr('data-roll-field');
         var roll_type = $(this).attr('data-roll-type');
-        var $outputTable = $(this).parent().find("table.attack-roll-output-table");
+        var $outputTable = $(this).closest("div.row").find("table.attack-roll-output-table");
 
         $.ajax({
             type: "POST",
@@ -90,8 +90,11 @@ $(document).ready(function(){
             tdExtraClass2 = rolls[1]["base"] == 1 ? "critical-failure" : tdExtraClass2;
             $outputTable.find("td[data-attack-roll-1]").html(rolls[0]["total"]).removeClass("critical-success critical-failure").addClass(tdExtraClass1);
             $outputTable.find("td[data-attack-dmg-1]").html(rolls[0]["damage"]["total"]);
+            $outputTable.find("td[data-attack-avg-1]").html(rolls[0]["damage"]["avg"]);
+
             $outputTable.find("td[data-attack-roll-2]").html(rolls[1]["total"]).removeClass("critical-success critical-failure").addClass(tdExtraClass2);
             $outputTable.find("td[data-attack-dmg-2]").html(rolls[1]["damage"]["total"]);
+            $outputTable.find("td[data-attack-avg-2]").html(rolls[1]["damage"]["avg"]);
         }).fail(function(err){
             console.log(err);
         });

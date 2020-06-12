@@ -319,7 +319,7 @@ class Creature(models.Model):
                 base += die_roll
             total = base + attack.dmg_mod
             mod_symbol = "+" if attack.dmg_mod >= 0 else ""
-            return {"base": base, "mod": attack.dmg_mod, "mod_symbol": mod_symbol, "total": total }
+            return {"base": base, "mod": attack.dmg_mod, "mod_symbol": mod_symbol, "total": total, "avg": attack.dmg_avg}
 
         def _get_roll():
             roll = _get_base_roll()

@@ -70,27 +70,36 @@
                                                       <h5 class="card-title">{{ attack.name }}</h5>
                                                       <h6 class="card-subtitle text-muted">Attack</h6>
                                                       <p class="card-text">{{ attack.description }}</p>
-                                                      <a href="" class="btn btn-primary" data-roll-type="attack" data-roll-field="{{ attack.name }}">
-                                                          Roll this Attack
-                                                      </a>
-                                                      <table class="attack-roll-output-table">
-                                                          <thead>
-                                                            <tr>
-                                                                <th>Hit</th>
-                                                                <th>Dmg</th>
-                                                            </tr>
-                                                          </thead>
-                                                          <tbody>
-                                                            <tr>
-                                                                <td data-attack-roll-1></td>
-                                                                <td data-attack-dmg-1></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td data-attack-roll-2></td>
-                                                                <td data-attack-dmg-2></td>
-                                                            </tr>
-                                                          </tbody>
-                                                      </table>
+                                                      <div class="row">
+                                                          <div class="col-6">
+                                                              <a href="" class="btn btn-primary" data-roll-type="attack" data-roll-field="{{ attack.name }}">
+                                                                  Roll this Attack
+                                                              </a>
+                                                          </div>
+                                                          <div class="col-6">
+                                                              <table class="table table-bordered attack-roll-output-table">
+                                                                  <thead>
+                                                                    <tr>
+                                                                        <th>Hit</th>
+                                                                        <th>Dmg</th>
+                                                                        <th>Avg</th>
+                                                                    </tr>
+                                                                  </thead>
+                                                                  <tbody>
+                                                                    <tr>
+                                                                        <td data-attack-roll-1></td>
+                                                                        <td data-attack-dmg-1></td>
+                                                                        <td data-attack-avg-1></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td data-attack-roll-2></td>
+                                                                        <td data-attack-dmg-2></td>
+                                                                        <td data-attack-avg-2></td>
+                                                                    </tr>
+                                                                  </tbody>
+                                                              </table>
+                                                          </div>
+                                                      </div>
                                                   </div>
                                               </div>
                                               {% endfor %}

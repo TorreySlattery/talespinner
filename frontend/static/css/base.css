@@ -20,12 +20,12 @@ div.roll-result {
     white-space: nowrap;
 }
 
-.critical-success {
-    border: 1px solid blue;
+td.critical-success {
+    border-color: blue;
 }
 
-.critical-failure {
-    border: 1px solid red;
+td.critical-failure {
+    border-color: red;
 }
 
 table.attack-roll-output-table, a.btn-primary {
