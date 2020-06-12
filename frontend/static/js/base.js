@@ -15,9 +15,16 @@ $(document).ready(function(){
                 "roll_scope": "individual"
             },
         }).done(function(data){
-            var first_roll = data["results"][creature_id][field_name][0];  // These might be string or int indices, keep in mind
-            var second_roll = data["results"][creature_id][field_name][1];
-            $td.siblings("td[data-roll-output-field]").html(`<div class="roll-result">${first_roll}</div><div class="roll-result">${second_roll}</div>`);
+            var first_roll = data["results"][creature_id][0];
+            var emphasize_1 = first_roll["base"] == 20 ? "critical": ""
+            var second_roll = data["results"][creature_id][1];
+            var emphasize_2 = second_roll["base"] == 20 ? "critical": ""
+            $td.siblings("td[data-roll-output-field]").html(
+            `
+                <div class="roll-result ${emphasize_1}">${first_roll["total"]}</div>
+                <div class="roll-result ${emphasize_2}">${second_roll["total"]}</div>
+            `
+            );
         }).fail(function(err){
             console.log(err);
         });

@@ -63,9 +63,7 @@ class RollView(APIView):
 
             try:
                 rolls = {
-                    f"{creature.id}": {
-                        f"{field_name}": creature.roll(field_name=field_name, roll_type=roll_type)
-                    }
+                    f"{creature.id}": creature.roll(field_name=field_name, roll_type=roll_type)
                 }
             except AttributeError:
                 return Response(
@@ -86,9 +84,7 @@ class RollView(APIView):
             rolls = {}
             for creature in creatures:
                 # This is way overkill for just a single field, but it gives us room if we want to expand later
-                rolls[f"{creature.id}"] = {
-                        f"{field_name}": creature.roll(field_name=field_name, roll_type=roll_type)
-                    }
+                rolls[f"{creature.id}"] = creature.roll(field_name=field_name, roll_type=roll_type)
 
         content = {"results": rolls}
         return Response(content)

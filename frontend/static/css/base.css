@@ -19,3 +19,7 @@ table.table {
 div.roll-result {
     white-space: nowrap;
 }
+
+div.roll-result.critical {
+    border: 1px solid red;
+}
